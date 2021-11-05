@@ -512,3 +512,175 @@ function typeOf(obj) {
 //   return pre + cur;
 // }, 9);
 // console.log(mapArr);
+
+//实现函数原型方法
+//call:方法使用一个指定的 this 值和单独给出的一个或多个参数来调用一个函数
+
+// Function.prototype.call2 = function (ctx, ...args) {
+//   ctx = ctx || window;
+//   args = args ? args : [];
+//   let fn = Symbol();
+//   ctx[fn] = this;
+//   const result = ctx[fn](...args);
+//   delete ctx[fn];
+//   return result;
+// };
+
+// function mySymbol(obj) {
+//   // 不要问我为什么这么写，我也不知道就感觉这样nb
+//   let unique = (Math.random() + new Date().getTime()).toString(32).slice(0, 8);
+//   // 牛逼也要严谨
+//   if (obj.hasOwnProperty(unique)) {
+//     return mySymbol(obj); //递归调用
+//   } else {
+//     return unique;
+//   }
+// }
+
+// function Product(name, price) {
+//   this.name = name;
+//   this.price = price;
+// }
+
+// function Food(name, price) {
+//   Product.call2(this, name, price);
+//   this.category = "food";
+// }
+
+// console.log(new Food("cheese", 5).name);
+
+//apply:方法调用一个具有给定this值的函数，以及以一个数组（或类数组对象）的形式提供的参数。
+
+// Function.prototype.apply2 = function (context, args) {
+//   context = context || window;
+//   args ? args : [];
+//   let fn = Symbol();
+//   const result = context[fn](...args);
+//   delete context[fn];
+//   return result;
+// };
+
+// function Product(name, price) {
+//   this.name = name;
+//   this.price = price;
+// }
+
+// function Food(name, price) {
+//   Product.apply2(this, [name, price]);
+//   this.category = "food";
+// }
+
+// console.log(new Food("cheese", 5).name);
+
+//bind:方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。
+// Function.prototype.bind2 = function (ctx, ...args) {
+//   ctx = ctx || window;
+//   args = args || [];
+//   let fn = Symbol();
+//   ctx[fn] = this;
+//   return function (...arg) {
+//     return ctx[fn](...args, ...arg);
+//   };
+// };
+
+// Function.prototype.bind2 = function (thisArg) {
+//   if (typeof this !== "function") {
+//     throw TypeError("Bind must be called on a function");
+//   }
+//   const args = Array.prototype.slice.call(arguments, 1),
+//     self = this,
+//     // 构建一个干净的函数，用于保存原函数的原型
+//     nop = function () {},
+//     // 绑定的函数
+//     bound = function () {
+//       // this instanceof nop, 判断是否使用 new 来调用 bound
+//       // 如果是 new 来调用的话，this的指向就是其实例，
+//       // 如果不是 new 调用的话，就改变 this 指向到指定的对象 o
+//       return self.apply(
+//         this instanceof nop ? this : thisArg,
+//         args.concat(Array.prototype.slice.call(arguments))
+//       );
+//     };
+//   // 箭头函数没有 prototype，箭头函数this永远指向它所在的作用域
+
+//   if (this.prototype) {
+//     nop.prototype = this.prototype;
+//   }
+//   // 修改绑定函数的原型指向
+//   bound.prototype = new nop();
+//   console.log(1212, bound.prototype.__proto__, nop.prototype);
+
+//   return bound;
+// };
+
+// let obj = { name: "ciel" };
+// function test(x, y, z) {
+//   console.log(this.name); // ciel
+//   console.log(x + y + z); // 6
+// }
+// test.prototype.say = function () {
+//   console.log("hello");
+// };
+// let Bound = test.bind2(obj, 1, 2);
+// Bound(3); // 6
+// const bound1 = new Bound(); // bound {}
+// console.log(bound1.__proto__.__proto__, Bound.prototype.__proto__);
+
+//实现new关键字：运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。
+
+// function myNew(fn, ...args) {
+//   //判断是不是function的实例
+//   if (!(fn instanceof Function)) throw Error("this is not a function");
+//   // 创建一个空的简单JavaScript对象（即{}）；
+//   const obj = new Object();
+//   // 为步骤1新创建的对象添加属性__proto__，将该属性链接至构造函数的原型对象 ；
+//   obj.__proto__ = fn.prototype;
+//   // 将步骤1新创建的对象作为this的上下文 ；
+//   const ret = fn.apply(obj, args);
+//   // 如果该函数没有返回对象，则返回this。
+//   return typeof ret === "object" ? ret || obj : obj;
+// }
+
+// function myNew() {
+//   var obj = new Object()
+//   Constructor = [].shift.call(arguments);
+//   obj.__proto__ = Constructor.prototype;
+//   var ret = Constructor.apply(obj, arguments);
+
+//   // ret || obj 这里这么写考虑了构造函数显示返回 null 的情况
+//   return typeof ret === 'object' ? ret || obj : obj;
+// };
+
+// 测试
+// function foo() {
+//   this.name = "ciel";
+//   this.arg = arguments[0];
+//   return { a: 2 };
+// }
+// foo.prototype.callName = function () {
+//   console.log(this.name);
+// };
+
+// let test = myNew(foo, "hhh", "123", "saf");
+// let test = new foo("hhh", "123", "saf");
+// test.callName();
+// console.log(test);
+
+//instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。
+
+function instanceof2(left, right) {
+  if (left.__proto__ === right.prototype) {
+    return true;
+  }
+}
+
+function instanceof2(left, right) {
+  let proto = left.__proto__
+  while (true) {
+      if (proto === null) return false
+      if (proto === right.prototype) {
+          return true
+      }
+      proto = proto.__proto__
+  }
+}
