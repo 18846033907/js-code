@@ -668,19 +668,124 @@ function typeOf(obj) {
 
 //instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。
 
-function instanceof2(left, right) {
-  if (left.__proto__ === right.prototype) {
-    return true;
-  }
-}
+// function instanceof2(left, right) {
+//   const proto = left.__proto__;
+//   if (proto === null) return false;
+//   if (proto === right.prototype) return true;
+//   return instanceof2(proto, right);
+// }
 
-function instanceof2(left, right) {
-  let proto = left.__proto__
-  while (true) {
-      if (proto === null) return false
-      if (proto === right.prototype) {
-          return true
-      }
-      proto = proto.__proto__
-  }
-}
+// function instanceof2(left, right) {
+//   let proto = left.__proto__;
+//   while (true) {
+//     if (proto === null) return false;
+//     if (proto === right.prototype) {
+//       return true;
+//     }
+//     proto = proto.__proto__;
+//   }
+// }
+
+// function Car(make, model, year) {
+//   this.make = make;
+//   this.model = model;
+//   this.year = year;
+// }
+// const auto = new Car("Honda", "Accord", 1998);
+
+// console.log(instanceof2(auto, Function));
+
+// console.log(instanceof2(auto, Object));
+
+//Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
+//Object.defineProperties() 方法直接在一个对象上定义新的属性或修改现有属性，并返回该对象。
+// Object.create2 = function (proto, propertiesObject) {
+//   if (typeof proto !== "object" && typeof proto !== "function") {
+//     throw new TypeError("Object prototype may only be an Object: " + proto);
+//   }
+//   if (proto === null) {
+//     throw new Error(
+//       "This browser's implementation of Object.create is a shim and doesn't support 'null' as the first argument."
+//     );
+//   }
+//   //obj.__proto__=F.prototype=proto
+//   // function F() {}
+//   // F.prototype = proto;
+//   // const obj = new F();
+
+//   const obj = new Object();
+//   obj.__proto__ = proto;
+//   //obj.__proto__=Object.prototype;
+//   //obj.__proto__=proto
+//   if (propertiesObject !== undefined) {
+//     Object.defineProperties(obj, propertyObject);
+//   }
+//   return obj;
+// };
+// // Shape - 父类(superclass)
+// function Shape() {
+//   this.x = 0;
+//   this.y = 0;
+// }
+
+// // 父类的方法
+// Shape.prototype.move = function (x, y) {
+//   this.x += x;
+//   this.y += y;
+//   console.info("Shape moved.");
+// };
+
+// // Rectangle - 子类(subclass)
+// function Rectangle() {
+//   Shape.call(this); // call super constructor.
+// }
+
+// // 子类续承父类
+// Rectangle.prototype = Object.create2(Shape.prototype); //Rectangle.prototype=new Shape
+
+// //Rectangle.prototype.__proto__=Shape.prototype
+// Rectangle.prototype.constructor = Rectangle;
+
+// var rect = new Rectangle();
+// console.log(rect.__proto__, Rectangle.prototype);
+
+// console.log("Is rect an instance of Rectangle?", rect instanceof Rectangle); // true
+// console.log("Is rect an instance of Shape?", rect instanceof Shape); // true
+// rect.move(1, 1); // Outputs, 'Shape moved.'
+
+// const person = {
+//   isHuman: false,
+//   printIntroduction: function () {
+//     console.log(`My name is ${this.name}. Am I human? ${this.isHuman}`);
+//   },
+// };
+
+// const me = Object.create2(person);
+// // console.log(me.__proto__=== person);
+
+// me.name = "Matthew"; // "name" is a property set on "me", but not on "person"
+// me.isHuman = true; // inherited properties can be overwritten
+
+// me.printIntroduction();
+// // expected output: "My name is Matthew. Am I human? true"
+
+//Object.assign() 方法用于将所有可枚举属性的值从一个或多个源对象分配到目标对象。它将返回目标对象。
+// Object.assign2 = function (target, ...source) {
+//   if (Object.prototype.toString.call(target) !== "[object Object]") {
+//     throw new TypeError("this is not an object!");
+//   }
+//   // if (target === null) {
+//   //   throw new TypeError("Cannot convert undefined or null to object");
+//   // }
+//   let ret = target
+//   source.forEach(function (item) {
+//     //for...in只会遍历可枚举属性
+//     for (let prop in item) {
+//       if (item.hasOwnProperty(prop)) {
+//         ret[prop] = item[prop];
+//       }
+//     }
+//   });
+//   return ret;
+// };
+
