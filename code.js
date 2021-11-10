@@ -22,8 +22,8 @@ function typeOf(obj) {
 //   });
 //   return res;
 // }
-//ES6实现
 
+//ES6实现
 // function uniq(arr) {
 //   return [...new Set(arr)];
 // }
@@ -69,7 +69,32 @@ function typeOf(obj) {
 //   }
 //   return newObj;
 // }
+
+// function shallowCopy(obj) {
+//   if (typeof obj === "object" && obj !== null) {
+//    let res = Array.isArray(obj) ? [] : {};
+//     for (let key in obj) {
+//       res[key] = obj[key];
+//     }
+//     return res
+//   }else{
+//   return obj
+// }
+// }
+
 //深拷贝
+
+// function deepCopy(obj) {
+//   if (typeof obj === "object" && obj !== null) {
+//    let res = Array.isArray(obj) ? [] : {};
+//     for (let key in obj) {
+//       res[key] = deepCopy(obj[key]);
+//     }
+//     return res;
+//   } else {
+//     return obj;
+//   }
+// }
 // function deepCopy(obj) {
 //   if (obj === null) return obj;
 //   if (obj instanceof Date) return new Date(obj);
@@ -111,9 +136,9 @@ function typeOf(obj) {
 // console.log(obj1, obj);
 
 // const obj1 = deepCopy(obj);
-// const obj2 = cloneCopy(obj);
+// const obj2 = deepCopy(obj);
 // obj1.arr[1] = [5, 6, 7];
-// console.log(obj1, obj);
+// console.log(obj1, obj2);
 
 //解析URL参数为对象
 // function parseUrl(url) {
@@ -169,8 +194,10 @@ function typeOf(obj) {
 //   const reg = /\{\{(\w+)\}\}/;
 //   let str = template;
 //   while (reg.test(str)) {
+//     //exec第一个
 //     const arr = reg.exec(str);
 //     const key = arr[1];
+//     //replace第一个
 //     str=str.replace(reg, obj[key]);
 //   }
 //   return str;
@@ -184,37 +211,13 @@ function typeOf(obj) {
 //   }
 //   return template; // 如果模板没有模板字符串直接返回
 // }
+
 // let template = "年龄{{age}},性别{{sex}},我是{{name}}";
 // let person = {
 //   name: "布兰",
 //   age: 12,
 // };
 // console.log(render(template, person)); // 我是布兰，年龄12，性别undefined
-
-//图片懒加载
-
-// let imgList = [...document.querySelectorAll("img")];
-// let length = imgList.length;
-
-// // 修正错误，需要加上自执行
-// const imgLazyLoad = (function () {
-//   let count = 0;
-//   return function () {
-//     let deleteIndexList = [];
-//     imgList.forEach((img, index) => {
-//       let rect = img.getBoundingClientRect();
-//       if (rect.top < window.innerHeight) {
-//         img.src = img.dataset.src;
-//         deleteIndexList.push(index);
-//         count++;
-//         if (count === length) {
-//           document.removeEventListener("scroll", imgLazyLoad);
-//         }
-//       }
-//     });
-//     imgList = imgList.filter((img, index) => !deleteIndexList.includes(index));
-//   };
-// })();
 
 //函数防抖:触发高频事件 N 秒后只会执行一次，如果 N 秒内事件再次触发，则会重新计时。
 //简单版:支持this和传参
@@ -229,6 +232,7 @@ function typeOf(obj) {
 //     }, delay);
 //   };
 // }
+
 // //复杂版:支持立即执行；函数可能有返回值；支持取消功能；
 // function debounce(func, wait, immediate) {
 //   var timeout, result;
@@ -240,7 +244,7 @@ function typeOf(obj) {
 //       // 如果已经执行过，不再执行
 //       var callNow = !timeout;
 //       timeout = setTimeout(function () {
-//         timeout = null;
+//         timeout = null;//有点问题，可改成result = func.apply(context, args)
 //       }, wait);
 //       if (callNow) result = func.apply(context, args);
 //     } else {
@@ -285,6 +289,14 @@ function typeOf(obj) {
 //   };
 //   return debounced;
 // }
+
+//测试防抖
+// const node = document.getElementById("btn");
+// function getUserAction() {
+//   console.log("hhahah");
+// }
+// node.onclick = debounce(getUserAction, 2000, true);
+
 // //函数节流:触发高频事件，且 N 秒内只执行一次
 // //简单版:定时器版
 // function throttle(fn, delay) {
@@ -328,13 +340,19 @@ function typeOf(obj) {
 //   return throttled;
 // }
 
+// const node = document.getElementById("btn");
+// function getUserAction() {
+//   console.log("hhahah");
+// }
+// node.onclick = throttle(getUserAction, 2000);
 //函数柯里化:举个例子
 // function add(a, b, c) {
-//   return a + b + c
+//   return a + b + c;
 // }
-// add(1, 2, 3)
-// let addCurry = curry(add)
-// addCurry(1)(2)(3)
+// add(1, 2, 3);
+// let addCurry = curry(add);
+// const res = addCurry(1)(2)(3);
+// console.log(32, res);
 
 //函数柯里化实现
 // function curry(fn) {
@@ -351,7 +369,7 @@ function typeOf(obj) {
 // function add(a, b, c) {
 //   return a + b + c;
 // }
-// //偏函数实现
+//偏函数实现
 
 // function partial(fn, ...args) {
 //   return function (...arg) {
@@ -788,4 +806,3 @@ function typeOf(obj) {
 //   });
 //   return ret;
 // };
-

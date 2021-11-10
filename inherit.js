@@ -22,10 +22,9 @@
 // let child1 = new Child();
 // let child2 = new Child();
 // console.log(child1.__proto__, Child.prototype);
-// child1.info.gender = "男";
-// child1.getInfo(); // {name: "yhd", age: 18, gender: "男"}
+// child1.info.age = 2;
+// child1.getInfo();
 
-// child2.getInfo(); // {name: "yhd", age: 18, gender: "男"}
 // child2.isShow = false;
 // console.log(child1,child2)
 
@@ -36,12 +35,18 @@
 // function Parent(name) {
 //   this.info = { name: name };
 // }
+// Parent.prototype.sayName=function(){
+//     console.log(this.name)
+// }
 // function Child(name) {
 //   //继承自Parent，并传参
 //   Parent.call(this, name);
 
 //    //实例属性
 //   this.age = 18
+// }
+// Child.prototype.sayAge=function(){
+//     console.log(this.age)
 // }
 
 // let child1 = new Child("yhd");
@@ -86,8 +91,9 @@
 // console.log(child2.colors); // ["red", "blue", "yellow"]
 // child2.sayAge(); // 30
 // child2.sayName(); // "wxb"
+// console.log(child1,child2)
 
-//原型链继承
+//原型式继承:对参数对象的一种浅复制
 // function objectCopy(obj) {
 //   function Fun() { };
 //   Fun.prototype = obj;
@@ -104,6 +110,9 @@
 // }
 
 // let person1 = objectCopy(person);
+// //person1.__proto__=Fun.prototype=person
+// //person1=Object.create(person)
+// console.log(person1)
 // person1.name = "wxb";
 // person1.friends.push("lily");
 // person1.sayName(); // wxb
@@ -113,7 +122,7 @@
 // person2.friends.push("kobe");
 // person2.sayName(); // "gsr"
 
-// console.log(person.friends); // ["jack", "tom", "rose", "lily", "kobe"]
+// console.log(person,person1,person2); // ["jack", "tom", "rose", "lily", "kobe"]
 
 //寄生式继承
 
@@ -137,12 +146,15 @@
 // }
 
 // let person1 = createAnother(person);
+// // person1.__proto__=Fun.prototype=person
+// console.log(person1)
 // person1.friends.push("lily");
 // console.log(person1.friends);
 // person1.getName(); // yhd
 
 // let person2 = createAnother(person);
 // console.log(person2.friends); // ["rose", "tom", "jack", "lily"]
+// console.log(person,person1,person2)
 
 //寄生式组合继承
 // 只调用一次父类构造函数
@@ -158,10 +170,12 @@
 //     //Fun.prototype=Parent.prototype
 //   }
 
+
 //   function inheritPrototype(child, parent) {
 //     let prototype = objectCopy(parent.prototype); // 创建对象
+//     //prototype.__proto__=Fun.prototype=parent.prototype
 //     prototype.constructor = child; // 增强对象
-//     Child.prototype = prototype; // 赋值对象
+//     child.prototype = prototype; // 赋值对象
 //   }
 
 //   function Parent(name) {
@@ -182,17 +196,19 @@
 //   Child.prototype.sayAge = function () {
 //     console.log(this.age);
 //   }
+
+//   console.log(Child.prototype)
 //   let child1 = new Child("yhd", 23);
+// //   child1.__proto__=Child.prototype
 //   console.log(185,child1)
 //   child1.sayAge(); // 23
 //   child1.sayName(); // yhd
-//   child1.friends.push("jack");
-//   console.log(child1.friends); // ["rose", "lily", "tom", "jack"]
+//   child1.friends.push("jack");// ["rose", "lily", "tom", "jack"]
 
 //   let child2 = new Child("yl", 22)
 //   child2.sayAge(); // 22
 //   child2.sayName(); // yl
-//   console.log(child2.friends); // ["rose", "lily", "tom"]
+//   console.log(child1,child2); // ["rose", "lily", "tom"]
 
 //apply bind call
 // let obj = {
