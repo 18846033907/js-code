@@ -511,9 +511,9 @@ function typeOf(obj) {
 //     throw new Error("This is not a function!");
 //   const _this = this;
 //   const l = _this.length;
-//   let i = init ? 0 : 1;
-//   let res = init ? init : _this[i];
-//   if (typeOf(init) === "number") {
+//   let i = 1;
+//   let res = _this[0];
+//   if (arguments.length > 1) {
 //     i = 0;
 //     res = init;
 //   }
@@ -525,15 +525,36 @@ function typeOf(obj) {
 //   return res;
 // };
 
+// var flattened = [
+//   [0, 1],
+//   [2, 3],
+//   [4, 5],
+// ].reduce(function (a, b) {
+//   return a.concat(b);
+// }, []);
+
 // const arr = [1, 2, 3, 4];
 // const mapArr = arr.reduce2((pre, cur) => {
 //   return pre + cur;
-// }, 9);
+// }, 0);
 // console.log(mapArr);
 
 //实现函数原型方法
 //call:方法使用一个指定的 this 值和单独给出的一个或多个参数来调用一个函数
 
+// Function.prototype.call2 = function (context) {
+//   var context = context || window;
+//   context.fn = this;
+
+//   const args = [];
+//   for (var i = 1, len = arguments.length; i < len; i++) {
+//     args.push("arguments[" + i + "]");
+//   }
+//   const result = eval("context.fn(" + args + ")");
+
+//   delete context.fn;
+//   return result;
+// };
 // Function.prototype.call2 = function (ctx, ...args) {
 //   ctx = ctx || window;
 //   args = args ? args : [];
@@ -575,6 +596,24 @@ function typeOf(obj) {
 //   let fn = Symbol();
 //   const result = context[fn](...args);
 //   delete context[fn];
+//   return result;
+// };
+// Function.prototype.apply2 = function (context, arr) {
+//   var context = context || window;
+//   context.fn = this;
+//   let result;
+//   let args = [];
+//   const l = arr.length;
+//   if (l > 0) {
+//     for (let i = 0; i < l; i++) {
+//       args.push("arr[" + i + "]");
+//     }
+//     console.log("context.fn(" + args + ")",args)
+//     result = eval("context.fn(" + args + ")");
+//   } else {
+//     result = context.fn();
+//   }
+//   delete context.fn;
 //   return result;
 // };
 
@@ -620,7 +659,7 @@ function typeOf(obj) {
 //       );
 //     };
 //   // 箭头函数没有 prototype，箭头函数this永远指向它所在的作用域
-
+//   console.log(662,this.prototype);
 //   if (this.prototype) {
 //     nop.prototype = this.prototype;
 //   }
@@ -632,55 +671,182 @@ function typeOf(obj) {
 // };
 
 // let obj = { name: "ciel" };
-// function test(x, y, z) {
+// function Test(x, y, z) {
 //   console.log(this.name); // ciel
 //   console.log(x + y + z); // 6
 // }
-// test.prototype.say = function () {
+// Test.prototype.say = function () {
 //   console.log("hello");
 // };
-// let Bound = test.bind2(obj, 1, 2);
+// let Bound = Test.bind2(obj, 1, 2);
 // Bound(3); // 6
 // const bound1 = new Bound(); // bound {}
 // console.log(bound1.__proto__.__proto__, Bound.prototype.__proto__);
 
-//实现new关键字：运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。
+// Function.prototype.bind2 = function (thisArg) {
+//   //判断this是否为function
+//   if (typeof this !== "function")
+//     throw new TypeError("bind must be called by a function");
+//   const self = this;
+//   // function F() {}
+//   const args = Array.prototype.slice.call(arguments, 1);
+//   const bound = function () {
+//     const arg = Array.prototype.slice.call(arguments);
+//     const params = args.concat(arg);
+//     if (this instanceof bound) {
+//       const result = self.apply(this, params);
+//       const isObject = typeof result === "object" && result !== null;
+//       const isFunction = typeof result === "function";
+//       if (isObject || isFunction) {
+//         return result;
+//       }
+//       return this;
+//     } else {
+//       return self.apply(thisArg, params);
+//     }
+//   };
 
+//   if (self.prototype) {
+//     // F.prototype = self.prototype;
+//     // bound.prototype = new F();
+//     bound.prototype=Object.create(self.prototype)
+//     //bound.prototype.__proto__=self.prototype;F函数的this指向bound
+//   }
+
+//   return bound;
+// };
+
+// var obj = {
+//   name: "若川",
+// };
+// function original(a, b){
+//   console.log(this)
+//   console.log(this.name);
+//   console.log([a, b]);
+// }
+// var bound = original.bind2(obj, 1);
+// bound(2); // '若川', [1, 2]
+
+// function original(a, b) {
+//   console.log("this", this); // original {}
+//   console.log("typeof this", typeof this); // object
+//   this.name = b;
+//   console.log("name", this.name); // 2
+//   console.log("this", this); // original {name: 2}
+//   console.log([a, b]); // 1, 2
+//   // return function(){
+//   //   console.log('function')
+//   // }
+// }
+// original.prototype.sayHi = function () {
+//   console.log("hi");
+// };
+// var Bound = original.bind2(obj, 1);
+// var newBoundResult = new Bound(2);
+// // console.log(newBoundResult.sayHi());
+// console.log(newBoundResult.__proto__, Bound.prototype); // original {name: 2}
+
+//es5-shim源码
+// var $Array = Array;
+// var ArrayPrototype = $Array.prototype;
+// var $Object = Object;
+// var array_push = ArrayPrototype.push;
+// var array_slice = ArrayPrototype.slice;
+// var array_join = ArrayPrototype.join;
+// var array_concat = ArrayPrototype.concat;
+// var $Function = Function;
+// var FunctionPrototype = $Function.prototype;
+// var apply = FunctionPrototype.apply;
+// var max = Math.max;
+// // 简版 源码更复杂些。
+// var isCallable = function isCallable(value){
+//     if(typeof value !== 'function'){
+//         return false;
+//     }
+//     return true;
+// };
+// var Empty = function Empty() {};
+// // 源码是 defineProperties
+// // 源码是bind笔者改成bindFn便于测试
+// FunctionPrototype.bind2 = function bind(that) {
+//     var target = this;
+//     if (!isCallable(target)) {
+//         throw new TypeError('Function.prototype.bind called on incompatible ' + target);
+//     }
+//     var args = array_slice.call(arguments, 1);
+//     var bound;
+//     var binder = function () {
+//         if (this instanceof bound) {
+//             var result = apply.call(
+//                 target,
+//                 this,
+//                 array_concat.call(args, array_slice.call(arguments))
+//             );
+//             if ($Object(result) === result) {
+//                 return result;
+//             }
+//             return this;
+//         } else {
+//             return apply.call(
+//                 target,
+//                 that,
+//                 array_concat.call(args, array_slice.call(arguments))
+//             );
+//         }
+//     };
+//     var boundLength = max(0, target.length - args.length);
+//     var boundArgs = [];
+//     for (var i = 0; i < boundLength; i++) {
+//         array_push.call(boundArgs, '$' + i);
+//     }
+//     // 这里是Function构造方式生成形参length $1, $2, $3...
+//     bound = $Function('binder', 'return function (' + array_join.call(boundArgs, ',') + '){ return binder.apply(this, arguments); }')(binder);
+
+//     if (target.prototype) {
+//         Empty.prototype = target.prototype;
+//         bound.prototype = new Empty();
+//         Empty.prototype = null;
+//     }
+//     return bound;
+// };
+
+//实现new关键字：运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。
+//es6
 // function myNew(fn, ...args) {
 //   //判断是不是function的实例
 //   if (!(fn instanceof Function)) throw Error("this is not a function");
 //   // 创建一个空的简单JavaScript对象（即{}）；
-//   const obj = new Object();
+//   const obj = {};
 //   // 为步骤1新创建的对象添加属性__proto__，将该属性链接至构造函数的原型对象 ；
 //   obj.__proto__ = fn.prototype;
 //   // 将步骤1新创建的对象作为this的上下文 ；
 //   const ret = fn.apply(obj, args);
 //   // 如果该函数没有返回对象，则返回this。
-//   return typeof ret === "object" ? ret || obj : obj;
+//     return typeof ret === 'object'||typeof ret==='function' ? ret || obj : obj;
 // }
-
+//es5
 // function myNew() {
-//   var obj = new Object()
+//   var obj = {}
+// // shift删除第一个元素并返回，改变原数组
 //   Constructor = [].shift.call(arguments);
 //   obj.__proto__ = Constructor.prototype;
 //   var ret = Constructor.apply(obj, arguments);
-
-//   // ret || obj 这里这么写考虑了构造函数显示返回 null 的情况
-//   return typeof ret === 'object' ? ret || obj : obj;
+//   // ret || obj 这里这么写考虑了构造函数显示返回 null 的情况(原生new操作符返回object，array和function时不能继承prototype)
+//   return typeof ret === 'object'||typeof ret==='function' ? ret || obj : obj;
 // };
 
 // 测试
 // function foo() {
 //   this.name = "ciel";
 //   this.arg = arguments[0];
-//   return { a: 2 };
+//   return function(){};
 // }
 // foo.prototype.callName = function () {
 //   console.log(this.name);
 // };
 
 // let test = myNew(foo, "hhh", "123", "saf");
-// let test = new foo("hhh", "123", "saf");
+// // let test = new foo("hhh", "123", "saf");
 // test.callName();
 // console.log(test);
 
@@ -704,6 +870,17 @@ function typeOf(obj) {
 //   }
 // }
 
+// function instanceof2(left, right) {
+//   const prototype = right.prototype;
+//   let flag = false;
+//   while (left.__proto__ !== prototype) {
+//     if (left.__proto__ === null) return flag = false
+//     left = left.__proto__;
+//   }
+//   if (left.__proto__ === prototype) flag = true;
+//   return flag;
+// }
+
 // function Car(make, model, year) {
 //   this.make = make;
 //   this.model = model;
@@ -712,6 +889,7 @@ function typeOf(obj) {
 // const auto = new Car("Honda", "Accord", 1998);
 
 // console.log(instanceof2(auto, Function));
+// console.log(auto instanceof Function);
 
 // console.log(instanceof2(auto, Object));
 

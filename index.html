@@ -13,11 +13,111 @@
         background: repeating-linear-gradient(30deg, #fb3 0 15px, #58a 0 30px);
       } 
     </style> -->
+    <style type="text/css">
+      .box {
+        width: 200px;
+        height: 200px;
+        border: 1px solid red;
+        display: grid;
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+      }
+      .children-box {
+        background: yellow;
+        /* align-self: center;
+        justify-self: center; */
+      }
+    </style>
   </head>
   <body>
-    <div id="root">
+    <div id="app">
+      <div class="box">
+        <div class="children-box">sdsdddd</div>
+      </div>
+    </div>
+
+    <!-- <div id="root">
       <button id="btn">点击</button>
     </div>
+    <div
+      id="a"
+      style="width: 100%; height: 300px; background-color: antiquewhite"
+    >
+      a
+      <div
+        id="b"
+        style="width: 100%; height: 200px; background-color: burlywood"
+      >
+        b
+        <div
+          id="c"
+          style="width: 100%; height: 100px; background-color: cornflowerblue"
+        >
+          c
+        </div>
+      </div>
+    </div>
+    <ul id="item-list">
+      <li>item1</li>
+      <li>item2</li>
+      <li>item3</li>
+      <li>item4</li>
+    </ul> -->
+    <script>
+      // var a = document.getElementById("a");
+      // var b = document.getElementById("b");
+      // var c = document.getElementById("c");
+      // //注册冒泡事件监听器
+      // a.addEventListener("click", () => {
+      //   console.log("冒泡a");
+      // });
+      // b.addEventListener("click", () => {
+      //   console.log("冒泡b");
+      // });
+      // c.addEventListener("click", () => {
+      //   console.log("冒泡c");
+      // });
+      // a.addEventListener(
+      //   "click",
+      //   () => {
+      //     console.log("捕获a");
+      //   },
+      //   true
+      // );
+      // b.addEventListener(
+      //   "click",
+      //   () => {
+      //     console.log("捕获b");
+      //   },
+      //   true
+      // );
+      // c.addEventListener(
+      //   "click",
+      //   () => {
+      //     console.log("捕获c");
+      //   },
+      //   true
+      // );
+
+      // var items = document.getElementById("item-list");
+      // //事件捕获实现事件代理
+      // items.addEventListener(
+      //   "click",
+      //   (e) => {
+      //     console.log("捕获：click ", e.target.innerHTML);
+      //   },
+      //   true
+      // );
+      // //事件冒泡实现事件代理
+      // items.addEventListener(
+      //   "click",
+      //   (e) => {
+      //     console.log("冒泡：click ", e.target.innerHTML);
+      //   },
+      //   false
+      // );
+    </script>
     <script src="./inherit.js"></script>
     <script src="./code.js"></script>
     <script src="./fn.js"></script>
