@@ -526,19 +526,369 @@ function deepCopy(obj) {
       }
     }
   }
-  return newObj
+  return newObj;
 }
 
-const obj = {
-  name: "lihan",
-  age: 40,
-  sex: {
-    one: "nv",
-    two: "nan",
-  },
+// const obj = {
+//   name: "lihan",
+//   age: 40,
+//   sex: {
+//     one: "nv",
+//     two: "nan",
+//   },
+// };
+// const obj1 = deepCopy(obj);
+// obj1.name = "ooo";
+// const obj2 = deepCopy(obj);
+// obj2.sex.one = "ppp";
+// console.log(obj1, obj2);
+
+//发布订阅
+//
+
+//数组扁平化
+// function flatten(arr) {
+//   if (Object.prototype.toString.call(arr) !== "[object Array]")
+//     throw new TypeError("this is not an array");
+//   const result = arr.reduce((pre, cur) => {
+//     return Array.isArray(cur) ? [...pre, ...flatten(cur)] : [...pre, cur];
+//   }, []);
+//   return result;
+// }
+
+// function flatten(arr) {
+//   while (
+//     arr.some((item) => {
+//       return Array.isArray(item);
+//     })
+//   ) {
+//     arr = [].concat(...arr);
+//   }
+//   return arr;
+// }
+
+// const arr = [3, 4, 2, 3, [4, 5, 4, [4, 5, 5, [6, 5]]]];
+// console.log(flatten(arr));
+
+//寄生组合继承
+// function Parent(name,age){
+//   this.name=name;
+//   this.age={age}
+// }
+// Parent.prototype.sayName=function(){
+// console.log(this.name)
+// }
+
+// function Child(){
+//   Parent.apply(this,arguments);
+//   this.sex='nv'
+// }
+
+// function generateObj(obj){
+// const F=function(){}
+// F.prototype=obj.prototype;
+// return new F()
+// }
+// function generateC(C,P){
+//   const prototype=generateObj(P);
+//   prototype.constructor=C;
+//   C.prototype=prototype;
+//   return C
+// }
+
+// const child=generateC(Child,Parent);
+
+// const child1=new child('child1',3);
+// const child2=new child('child2',4);
+// console.log(child1,child2)
+
+//compose
+
+// function compose(...args) {
+//   if (args.length === 1) {
+//     return args[0];
+//   }
+//   const res = args.reduceRight((pre, cur) => {
+//     return (...arg) => cur(pre(...arg));
+//   });
+//   return res;
+// }
+
+// // 用法如下:
+// function fn1(x) {
+//   return x + 1;
+// }
+// function fn2(x) {
+//   return x + 2;
+// }
+// function fn3(x) {
+//   return x + 3;
+// }
+// function fn4(x) {
+//   return x + 4;
+// }
+// const a = compose(fn1);
+// console.log(a(1)); // 1+4+3+2+1=11
+
+//new
+// function myNew(obj,...args){
+// const newObj={};
+// newObj.__proto__=obj.prototype;
+// obj.apply(newObj,args);
+// return newObj
+// }
+
+// function Parent(name){
+//   this.name=name
+// }
+// Parent.prototype.sayName=function(){
+// console.log(this.name)
+// }
+
+// const child=myNew(Parent,'hhh')
+// child.sayName()
+
+//call aplly bind
+Function.prototype.call2 = function (ctx, ...args) {
+  if (typeof this !== "function")
+    throw new TypeError("this is not called by a function");
+  ctx = ctx || window;
+  const fn = Symbol();
+  ctx[fn] = this;
+  ctx[fn](...args);
+  delete ctx[fn];
 };
-const obj1 = deepCopy(obj);
-obj1.name = "ooo";
-const obj2 = deepCopy(obj);
-obj2.sex.one = "ppp";
-console.log(obj1, obj2);
+// function fn(hh) {
+//   console.log(this.name, this.age,hh);
+// }
+// const obj = {
+//   name: "ooo",
+//   age: 2,
+// };
+
+// fn.call2(obj,'iii');
+
+Function.prototype.apply2 = function (ctx, args) {
+  if (typeof this !== "function")
+    throw new TypeError("this is not called by a function");
+  ctx = ctx || window;
+  const fn = Symbol();
+  ctx[fn] = this;
+  ctx[fn](...args);
+  delete ctx[fn];
+};
+
+// function fn(hh) {
+//   console.log(this.name, this.age,hh);
+// }
+// const obj = {
+//   name: "ooo",
+//   age: 2,
+// };
+
+// fn.apply2(obj,['iiis']);
+
+// Function.prototype.bind2 = function (ctx, ...args) {
+//   if (typeof this !== "function")
+//     throw new TypeError("this is not called by a function");
+//   ctx = ctx || window;
+//   const fn = Symbol();
+//   ctx[fn] = this;
+//   const bound = function (...arg) {
+//     if (this instanceof bound) {
+//       return ctx[fn].call(this, ...args, ...arg);
+//     } else {
+//       return ctx[fn](...args, ...arg);
+//     }
+//   };
+//   if(this.prototype){
+//     const F=function(){}
+//     F.prototype=this.prototype
+//     bound.prototype=new F();
+//   }
+
+//   return bound;
+// };
+// function Parent(name, age) {
+//   this.name = name;
+//   this.age = age;
+// }
+// Parent.prototype.say = function () {
+//   console.log(this.name, this.age);
+// };
+// const obj={
+//   name:'obj',
+//   age:9
+// }
+
+// const Child = Parent.bind2(obj,'pp');
+// const child1 = new Child();
+// child1.say()
+// function fn(name,age){
+//   console.log(name,age)
+// }
+// const hh=fn.bind2(null,'oo')
+// hh(3)
+
+//instanceof
+
+// function instanceof2(left, right) {
+//   while (true) {
+//     if (left.__proto__ === null) return false;
+//     if (left.__proto__ === right.prototype) return true;
+//     left = left.__proto__;
+//   }
+// }
+// function instanceof2(left,right){
+//   prototype=right.prototype;
+//   if(left.__proto__===prototype) return true;
+//   if(left.__proto__===null) return false
+//   return instanceof2(left.__proto__,right)
+// }
+
+// console.log( instanceof2(Function,Object))
+//函数柯里化
+// function curry(fn) {
+//   const res = function (...args) {
+//     if (fn.length === args.length) return fn(...args);
+//     return (...arg) => res(...args, ...arg);
+//   };
+//   return res;
+// }
+
+// function add(a, b, c) {
+//   return a + b + c;
+// }
+
+// const gg = curry(add);
+// console.log(gg(1)(2)(3));
+
+// //偏函数
+// function partial(fn, ...args) {
+//   const res = function (...arg) {
+//     return fn(...args, ...arg);
+//   };
+//   return res;
+// }
+
+// function add(a, b, c) {
+//   return a + b + c;
+// }
+// let partialAdd = partial(add, 1);
+// console.log(partialAdd(2, 3));
+
+//防抖节流
+// function debounce(fn, delay) {
+//   let timer = null;
+//   return function () {
+//     clearTimeout(timer);
+//     const ctx = this;
+//     timer = setTimeout(() => {
+//       fn.apply(ctx, arguments);
+//     }, delay);
+//   };
+// }
+
+// function throttle(fn, delay) {
+//   const time = new Date().getTime();
+//   return function () {
+//     const now = new Date().getTime();
+//     const ctx = this;
+//     if (now - time > delay) {
+//       fn.apply(ctx, arguments);
+//       time = now;
+//     }
+//   };
+// }
+
+//ajax
+function getJson() {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200 || xhr.status === 304) {
+        resolve(hr.responseText);
+      } else {
+        reject(new Error(xhr.responseText));
+      }
+    };
+  });
+}
+//jsonp
+//Object.create
+Object.create2 = function (proto, properObj) {
+  if (typeof proto !== "object" || typeof proto !== "function") {
+    throw new TypeError("");
+  }
+  if (
+    Object.prototype.toString.call(properObj) !== "[object Object]" ||
+    properObj !== undefined ||
+    properObj === null
+  ) {
+    throw new TypeError("");
+  }
+  const F = function () {};
+  F.prototype = proto;
+  const newObj = new F();
+  if (properObj !== undefined) {
+    Object.defineProperties(newObj, properObj);
+  }
+  return newObj;
+};
+
+//Object.assign
+Object.assign2 = function (target, ...source) {
+  //校验target类型
+  if (Object.prototype.toString.call(target) !== "[object Object]")
+    throw new Error();
+  //校验source类型
+  if (
+    source.some((item) => {
+      Object.prototype.toString.call(item) !== "[object Object]";
+    })
+  ) {
+    throw new Error();
+  }
+  const ret = Object(target);
+  for (let obj of source) {
+    for (let prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        ret[prop] = obj[prop];
+      }
+    }
+  }
+  return ret;
+};
+
+// const obj1={a:2,s:3}
+// const obj2={m:1,a:6}
+// const obj3={d:4,g:4,p:9}
+
+// const obj=Object.assign2(obj1,obj2,obj3)
+// console.log(obj)
+//类数组转化为数组
+const larr = "2,3,4,5,6,7,7,8,8";
+// const arr=Array.prototype.slice.call(larr)
+// const arr=Array.from(larr)
+// const arr=[...larr]
+// console.log(arr)
+
+//Object.is
+Object.is2 = function (x, y) {
+  if (x === y) {
+    //+0不等于-0
+    return x !== 0 || 1 / x === 1 / y;
+  } else {
+    //NAN相等
+    return x !== x && y !== y;
+  }
+};
+// console.log(
+//   Object.is2(0, -0),
+//   Object.is2(0, +0),
+//   Object.is2(-0, -0),
+//   Object.is2(NaN, 0 / 0)
+// );
