@@ -892,3 +892,100 @@ Object.is2 = function (x, y) {
 //   Object.is2(-0, -0),
 //   Object.is2(NaN, 0 / 0)
 // );
+
+const vnode = {
+  tag: "DIV",
+  attrs: {
+    id: "app",
+  },
+  children: [
+    {
+      tag: "SPAN",
+      children: [{ tag: "A", children: [] }],
+    },
+    {
+      tag: "SPAN",
+      children: [
+        { tag: "A", children: [] },
+        { tag: "A", children: [] },
+      ],
+    },
+  ],
+};
+function _render(vnode) {
+  if (typeof vnode === "number") {
+    vnode = String(vnode);
+  }
+  if (typeof vnode === "string") {
+    return document.createTextNode(vnode);
+  }
+  const dom = document.createElement(vnode.tag);
+  if (vnode.attrs) {
+    Object.keys(vnode.attrs).forEach((key) => {
+      const value = vnode.attrs[key];
+      dom.setAttribute(key, value);
+    });
+  }
+  if (vnode.children.length > 0) {
+    vnode.children.forEach((item) => {
+      dom.appendChild(_render(item));
+    });
+  }
+  return dom;
+}
+
+// console.log(render(vnode))
+// 把上诉虚拟Dom转化成下方真实Dom
+// <div id="app">
+//   <span>
+//     <a></a>
+//   </span>
+//   <span>
+//     <a></a>
+//     <a></a>
+//   </span>
+// </div>
+
+function render(template, data) {
+  const newstr = template.replace(/\{\{(\w+)\}\}/g, function (match, key) {
+    return data[key];
+  });
+
+  return newstr;
+}
+// let template = "我是{{name}}，年龄{{age}}，性别{{sex}}";
+// let data = {
+//   name: "姓名",
+//   age: 18,
+// };
+// console.log(render(template, data)) // 我是姓名，年龄18，性别undefined
+function isObject(obj) {
+  return typeof obj === "object" || obj !== null;
+}
+
+function flatten(obj) {
+  if (!isObject(obj)) return;
+  const newObj = Array.isArray(obj) ? [] : {};
+}
+
+const obj = {
+  a: {
+    b: 1,
+    c: 2,
+    d: { e: 5 },
+  },
+  b: [1, 3, { a: 2, b: 3 }],
+  c: 3,
+};
+
+flatten(obj);
+// {
+//  'a.b': 1,
+//  'a.c': 2,
+//  'a.d.e': 5,
+//  'b[0]': 1,
+//  'b[1]': 3,
+//  'b[2].a': 2,
+//  'b[2].b': 3
+//   c: 3
+// }
