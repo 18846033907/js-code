@@ -960,12 +960,30 @@ function render(template, data) {
 // };
 // console.log(render(template, data)) // 我是姓名，年龄18，性别undefined
 function isObject(obj) {
-  return typeof obj === "object" || obj !== null;
+  return typeof obj === "object" && obj !== null;
 }
 
 function flatten(obj) {
   if (!isObject(obj)) return;
-  const newObj = Array.isArray(obj) ? [] : {};
+  let res = {};
+  const dns = function (cur, prefix) {
+    if (isObject(cur)) {
+      if (Array.isArray(cur)) {
+        cur.forEach((item, index) => {
+          dns(item, `${prefix}[${index}]`);
+        });
+      } else {
+        for (let k in cur) {
+          const item = cur[k];
+          dns(item, `${prefix}${prefix ? "." : ""}${k}`);
+        }
+      }
+    } else {
+      res[prefix] = cur;
+    }
+  };
+  dns(obj, "");
+  return res;
 }
 
 const obj = {
@@ -978,7 +996,7 @@ const obj = {
   c: 3,
 };
 
-flatten(obj);
+// console.log(flatten(obj));
 // {
 //  'a.b': 1,
 //  'a.c': 2,
@@ -989,3 +1007,98 @@ flatten(obj);
 //  'b[2].b': 3
 //   c: 3
 // }
+//列表转为树形结构
+function listToTree(data) {
+  let temp = {};
+  let treeData = [];
+  for (let i = 0; i < data.length; i++) {
+    temp[data[i].id] = data[i];
+  }
+  for (let i in temp) {
+    if (+temp[i].parentId != 0) {
+      if (!temp[temp[i].parentId].children) {
+        temp[temp[i].parentId].children = [];
+      }
+      temp[temp[i].parentId].children.push(temp[i]);
+    } else {
+      treeData.push(temp[i]);
+    }
+  }
+  return treeData;
+}
+
+const listArr = [
+  {
+    id: 1,
+    text: "节点1",
+    parentId: 0, //这里用0表示为顶级节点
+  },
+  {
+    id: 2,
+    text: "节点1_1",
+    parentId: 1, //通过这个字段来确定子父级
+  },
+];
+// console.log(listToTree(listArr))
+
+// [
+//   {
+//       id: 1,
+//       text: '节点1',
+//       parentId: 0,
+//       children: [
+//           {
+//               id:2,
+//               text: '节点1_1',
+//               parentId:1
+//           }
+//       ]
+//   }
+// ]
+//树形转列表
+function treeToList(data) {
+  let res = [];
+  const dfs = (tree) => {
+    console.log(111,tree)
+    tree.forEach((item) => {
+      console.log(222,item)
+      if (item.children) {
+        dfs(item.children);
+        delete item.children;
+      }
+      res.push(item);
+    });
+  };
+  dfs(data);
+  return res;
+}
+
+const treeArr = [
+  {
+    id: 1,
+    text: "节点1",
+    parentId: 0,
+    children: [
+      {
+        id: 2,
+        text: "节点1_1",
+        parentId: 1,
+      },
+    ],
+  },
+];
+treeToList(treeArr)
+
+// [
+//   {
+//       id: 1,
+//       text: '节点1',
+//       parentId: 0 //这里用0表示为顶级节点
+//   },
+//   {
+//       id: 2,
+//       text: '节点1_1',
+//       parentId: 1 //通过这个字段来确定子父级
+//   }
+
+// ]
