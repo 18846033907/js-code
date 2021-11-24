@@ -959,13 +959,34 @@ function render(template, data) {
 //   age: 18,
 // };
 // console.log(render(template, data)) // 我是姓名，年龄18，性别undefined
-function isObject(obj) {
-  return typeof obj === "object" || obj !== null;
+
+function isObject(val) {
+  return typeof val === "object" && val !== null;
 }
 
 function flatten(obj) {
-  if (!isObject(obj)) return;
-  const newObj = Array.isArray(obj) ? [] : {};
+  if (!isObject(obj)) {
+    return;
+  }
+  let res = {};
+  const dfs = (cur, prefix) => {
+    if (isObject(cur)) {
+      if (Array.isArray(cur)) {
+        cur.forEach((item, index) => {
+          dfs(item, `${prefix}[${index}]`);
+        });
+      } else {
+        for (let k in cur) {
+          dfs(cur[k], `${prefix}${prefix ? "." : ""}${k}`);
+        }
+      }
+    } else {
+      res[prefix] = cur;
+    }
+  };
+  dfs(obj, "");
+
+  return res;
 }
 
 const obj = {
@@ -978,7 +999,7 @@ const obj = {
   c: 3,
 };
 
-flatten(obj);
+// flatten(obj);
 // {
 //  'a.b': 1,
 //  'a.c': 2,
@@ -989,3 +1010,35 @@ flatten(obj);
 //  'b[2].b': 3
 //   c: 3
 // }
+
+
+
+const arr=[
+  {
+      id: 1,
+      text: '节点1',
+      parentId: 0 //这里用0表示为顶级节点
+  },
+  {
+      id: 2,
+      text: '节点1_1',
+      parentId: 1 //通过这个字段来确定子父级
+  }
+
+]
+
+[
+  {
+      id: 1,
+      text: '节点1',
+      parentId: 0,
+      children: [
+          {
+              id:2,
+              text: '节点1_1',
+              parentId:1
+          }
+      ]
+  }
+]
+
