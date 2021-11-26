@@ -86,23 +86,20 @@ function climb(n) {
 
 //有效括号
 function valid(str) {
+  const len = str.length;
+  if (len % 2 !== 0) return false;
   const obj = { "(": ")", "{": "}", "[": "]" };
   let res = [];
-  for (let i = 0; i < str.length; i++) {
-    const prop = str[i];
-    if (prop === "(" || prop === "[" || prop === "{") {
-      console.log(22, prop);
-      res.push[obj[prop]];
+  for (let prop of str) {
+    if (prop in obj) {
+      res.push(prop);
     } else {
-      console.log(55, res, prop);
-      if (res[res.length - 1] === prop) {
-        res.pop();
-      } else {
-        return false;
-      }
+      if (obj[res.pop()] !== prop) {
+        return false
+      } 
     }
   }
-  return true;
+  return !res.length;
 }
-const str = "()[]{}";
+const str = "({}]{}";
 console.log(valid(str));
