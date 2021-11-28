@@ -26,7 +26,6 @@ const twoSum = function (nums, target) {
   let index = 0;
   const len = nums.length;
   while (index < len) {
-    debugger;
     const item = nums[index];
     const temp = target - item;
     if (nums.includes(temp) && nums.indexOf(temp) !== index) {
@@ -38,35 +37,35 @@ const twoSum = function (nums, target) {
   }
 };
 
-const twoSum = function (nums, target) {
-  const len = nums.length;
-  for (let i = 0; i < len - 1; i++) {
-    for (let j = i + 1; j < len; j++) {
-      if (nums[i] + nums[j] === target) {
-        return [i, j];
-      }
-    }
-  }
-};
+// const twoSum = function (nums, target) {
+//   const len = nums.length;
+//   for (let i = 0; i < len - 1; i++) {
+//     for (let j = i + 1; j < len; j++) {
+//       if (nums[i] + nums[j] === target) {
+//         return [i, j];
+//       }
+//     }
+//   }
+// };
 const nums = [3, 2, 4],
   target = 6;
 // console.log(twoSum(nums, target));
 //两数之和
-function twoSum(nums, target) {
-  let temp = {};
-  const len = nums.length;
-  for (i = 0; i < len; i++) {
-    const current = nums[i];
-    if (temp[target - current] !== undefined) {
-      return [temp[target - current], i];
-    }
-    temp[current] = i;
-  }
-}
+// function twoSum(nums, target) {
+//   let temp = {};
+//   const len = nums.length;
+//   for (i = 0; i < len; i++) {
+//     const current = nums[i];
+//     if (temp[target - current] !== undefined) {
+//       return [temp[target - current], i];
+//     }
+//     temp[current] = i;
+//   }
+// }
 // console.log(twoSum([1, 2, 3, 4, 3, 13], 15));
 
 //三数之和
-const nums = [-1, 0, 1, 2, -1, -4];
+// const nums = [-1, 0, 1, 2, -1, -4];
 
 // [
 //   [-1, 0, 1],
@@ -155,4 +154,4 @@ function valid(str) {
   return !res.length;
 }
 const str = "({}]{}";
-console.log(valid(str));
+// console.log(valid(str));

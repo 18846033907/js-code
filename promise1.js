@@ -989,15 +989,15 @@ function flatten(obj) {
   return res;
 }
 
-const obj = {
-  a: {
-    b: 1,
-    c: 2,
-    d: { e: 5 },
-  },
-  b: [1, 3, { a: 2, b: 3 }],
-  c: 3,
-};
+// const obj = {
+//   a: {
+//     b: 1,
+//     c: 2,
+//     d: { e: 5 },
+//   },
+//   b: [1, 3, { a: 2, b: 3 }],
+//   c: 3,
+// };
 
 // flatten(obj);
 // {
@@ -1013,34 +1013,34 @@ const obj = {
 
 
 
-const arr=[
-  {
-      id: 1,
-      text: '节点1',
-      parentId: 0 //这里用0表示为顶级节点
-  },
-  {
-      id: 2,
-      text: '节点1_1',
-      parentId: 1 //通过这个字段来确定子父级
-  }
+// const arr=[
+//   {
+//       id: 1,
+//       text: '节点1',
+//       parentId: 0 //这里用0表示为顶级节点
+//   },
+//   {
+//       id: 2,
+//       text: '节点1_1',
+//       parentId: 1 //通过这个字段来确定子父级
+//   }
 
-]
+// ]
 
-[
-  {
-      id: 1,
-      text: '节点1',
-      parentId: 0,
-      children: [
-          {
-              id:2,
-              text: '节点1_1',
-              parentId:1
-          }
-      ]
-  }
-]
+// [
+//   {
+//       id: 1,
+//       text: '节点1',
+//       parentId: 0,
+//       children: [
+//           {
+//               id:2,
+//               text: '节点1_1',
+//               parentId:1
+//           }
+//       ]
+//   }
+// ]
 //设计模式
 // 简单工厂
 // class Factory {
@@ -1080,10 +1080,10 @@ class UserFactory extends User {
   }
 }
 
-const admin = UserFactory.create('admin');
-console.log(admin); // {name: "管理员", menuAuth: Array(2)}
-const user = UserFactory.create('user');
-console.log(user); // {name: "普通用户", menuAuth: Array(1)}
+// const admin = UserFactory.create('admin');
+// console.log(admin); // {name: "管理员", menuAuth: Array(2)}
+// const user = UserFactory.create('user');
+// console.log(user); // {name: "普通用户", menuAuth: Array(1)}
 
 
 
