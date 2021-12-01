@@ -1,7 +1,7 @@
 //数据类型的判断
-function typeOf(obj) {
-  return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-}
+// function typeOf(obj) {
+//   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+// }
 //数组去重
 // function uniq(arr) {
 // if(!typeOf(arr)==='array') return
@@ -1022,19 +1022,19 @@ function typeOf(obj) {
 //       });
 //   }
 // }
-const scheduler = new Scheduler(2);
-const addTask = (time, order) => {
-  scheduler.add(time, order);
-};
-addTask(1000, "1");
-addTask(500, "2");
-addTask(300, "3");
-addTask(400, "4");
-addTask(1000, "5");
-addTask(500, "6");
-addTask(300, "7");
-addTask(400, "8");
-scheduler.taskStart();
+// const scheduler = new Scheduler(2);
+// const addTask = (time, order) => {
+//   scheduler.add(time, order);
+// };
+// addTask(1000, "1");
+// addTask(500, "2");
+// addTask(300, "3");
+// addTask(400, "4");
+// addTask(1000, "5");
+// addTask(500, "6");
+// addTask(300, "7");
+// addTask(400, "8");
+// scheduler.taskStart();
 
 // 一开始1、2两个任务开始执行
 // 500ms时，2任务执行完毕，输出2，任务3开始执行
