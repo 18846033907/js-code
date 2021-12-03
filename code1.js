@@ -628,5 +628,189 @@ function swap(arr, i, j) {
   arr[j] = temp;
 }
 
-const arr = [3, 4, 2, 1, 7, 8, 95, 5];
-console.log(mergeSort(arr));
+// const arr = [3, 4, 2, 1, 7, 8, 95, 5];
+// console.log(mergeSort(arr));
+
+//二分查找
+
+function search(arr, target, start, end) {
+  let targetIndex = -1;
+  let mid = Math.floor((start + end) / 2);
+  const middle = arr[mid];
+  if (middle === target) {
+    targetIndex = mid;
+    return targetIndex;
+  }
+  if (start >= end) {
+    return targetIndex;
+  }
+  if (middle > target) {
+    return search(arr, target, start, mid - 1);
+  } else {
+    return search(arr, target, mid + 1, end);
+  }
+}
+
+// const dataArr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// const position = search(dataArr, 6, 0, dataArr.length - 1);
+// if (position !== -1) {
+//   console.log(`目标元素在数组中的位置:${position}`);
+// } else {
+//   console.log("目标元素不在数组中");
+// }
+
+// 实现一个LazyMan
+class _LazyMan {
+  constructor(name) {
+    this.tasks = [];
+    const task = () => {
+      console.log(`Hi! This is ${name}`);
+      this.next();
+    };
+    this.tasks.push(task);
+    setTimeout(() => {
+      // 把 this.next() 放到调用栈清空之后执行
+      this.next();
+    }, 0);
+  }
+  next = () => {
+    const task = this.tasks.shift();
+    task && task();
+  };
+  sleep = (time) => {
+    this._sleepWrapper(time, false);
+    return this;
+  };
+
+  sleepFirst = (time) => {
+    this._sleepWrapper(time, true);
+    return this;
+  };
+
+  _sleepWrapper = (time, bool) => {
+    const task = () => {
+      setTimeout(() => {
+        console.log("Wake up after " + time);
+        this.next();
+      }, time * 1000);
+    };
+    if (bool) {
+      this.tasks.unshift(task);
+    } else {
+      this.tasks.push(task);
+    }
+  };
+
+  eat = (name) => {
+    this.tasks.push(() => {
+      console.log("Eat " + name + "~");
+      this.next();
+    });
+    return this;
+  };
+}
+
+function LazyMan(name) {
+  return new _LazyMan(name);
+}
+// LazyMan("Hank");
+// Hi! This is Hank!
+
+// LazyMan("Hank").sleep(10).eat("dinner");
+// Hi! This is Hank!
+// //等待10秒..
+// Wake up after 10
+// Eat dinner~
+
+// LazyMan("Hank").eat("dinner").eat("supper");
+// Hi This is Hank!
+// Eat dinner~
+// Eat supper~
+
+// LazyMan("Hank").eat("supper").sleepFirst(5);
+// //等待5秒
+// Wake up after 5
+// Hi This is Hank!
+// Eat supper
+
+//版本号排序：
+// 有一组版本号如下['0.1.1', '2.3.3', '0.302.1', '4.2', '4.3.5', '4.3.4.5']。
+// 现在需要对其进行排序，排序的结果为 ['4.3.5','4.3.4.5','2.3.3','0.302.1','0.1.1']
+
+function versionSort(arr) {
+  const newArr = arr.sort(function (left, right) {
+    let index = 0;
+    const arr1 = left.split(".");
+    const arr2 = right.split(".");
+    while (true) {
+      const s1 = arr1[index];
+      const s2 = arr2[index];
+      index++;
+      if (s1 === undefined || s2 === undefined) {
+        return arr2.length - arr1.length;
+      }
+      if (s1 === s2) continue;
+      return s2 - s1;
+    }
+  });
+  return newArr;
+}
+
+// const arr = ["0.1.1", "2.3.3", "0.302.1", "4.2", "4.3.5", "4.3.4.5"];
+// console.log(versionSort(arr));
+
+//LRU算法
+//  一个Map对象在迭代时会根据对象中元素的插入顺序来进行
+// 新添加的元素会被插入到map的末尾，整个栈倒序查看
+class LRUCache {
+  constructor(limit) {
+    this.cache = new Map();
+    this.limit = limit;
+  }
+  get(key) {
+    if (this.cache.has(key)) {
+      const value = this.cache.get(key);
+      this.cache.delete(key);
+      this.cache.set(key, value);
+      return value;
+    } else {
+      return -1;
+    }
+  }
+  put(key, value) {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+      this.cache.set(key, value);
+    } else if (this.cache.size < this.limit) {
+      this.cache.set(key, value);
+    } else {
+      this.cache.set(key, value);
+      this.cache.delete(this.cache.keys().next().value);
+    }
+  }
+}
+// let cache = new LRUCache(2);
+// cache.put(1, 1);
+// cache.put(2, 2);
+// console.log("cache.get(1)", cache.get(1))// 返回  1
+// cache.put(3, 3);// 该操作会使得密钥 2 作废
+// console.log("cache.get(2)", cache.get(2))// 返回 -1 (未找到)
+// cache.put(4, 4);// 该操作会使得密钥 1 作废
+// console.log("cache.get(1)", cache.get(1))// 返回 -1 (未找到)
+// console.log("cache.get(3)", cache.get(3))// 返回  3
+// console.log("cache.get(4)", cache.get(4))// 返回  4
+
+// 实现一个 add 方法 使计算结果能够满足如下预期： add(1)(2)(3)()=6 add(1,2,3)(4)()=10
+function _add(x, y) {
+  return x + y;
+}
+function add(...args) {
+  const fn = function (...params) {
+    console.log(params);
+    return (...arg)=>fn(...args,...arg)
+  };
+  return fn;
+}
+
+add(1)(2)()
+// add(1,2,3)(4)()
