@@ -805,12 +805,383 @@ function _add(x, y) {
   return x + y;
 }
 function add(...args) {
-  const fn = function (...params) {
-    console.log(params);
-    return (...arg)=>fn(...args,...arg)
-  };
+  let allArgs = [...args];
+  function fn(...newArgs) {
+    if (newArgs.length === 0) {
+      return allArgs.reduce(_add);
+    } else {
+      allArgs = [...allArgs, ...newArgs];
+      return fn;
+    }
+  }
   return fn;
 }
 
-add(1)(2)()
+// console.dir(add(1)(2, 3)());
 // add(1,2,3)(4)()
+function getN(num, target) {
+  let n = 2;
+  while (num * n < target) {
+    n++;
+  }
+  return n - 1;
+}
+
+// function coinsChange(arr, target) {
+//   let result = [],
+//     ret = target;
+//   const newArr = arr.sort(function (a, b) {
+//     return b - a;
+//   });
+//   for (let key of newArr) {
+//     const cur = key;
+//     if (ret <=0) return;
+//     if (cur <= ret) {
+//       const n = getN(cur, ret);
+//       let tempArr = Array(n).fill(cur, 0, n);
+//       result = result.concat(tempArr);
+//       ret = ret - cur*n;
+//     }
+//   }
+//   if (ret !== 0) return -1;
+//   return result;
+// }
+
+const coinChange = function (coins, amount) {
+  // 用于保存每个目标总额对应的最小硬币个数
+  const f = [];
+  // 提前定义已知情况
+  f[0] = 0;
+  // 遍历 [1, amount] 这个区间的硬币总额
+  for (let i = 1; i <= amount; i++) {
+    // 求的是最小值，因此我们预设为无穷大，确保它一定会被更小的数更新
+    f[i] = Infinity;
+    // 循环遍历每个可用硬币的面额
+    for (let j = 0; j < coins.length; j++) {
+      // 若硬币面额小于目标总额，则问题成立
+      if (i - coins[j] >= 0) {
+        // 状态转移方程
+        f[i] = Math.min(f[i], f[i - coins[j]] + 1);
+      }
+    }
+  }
+  // 若目标总额对应的解为无穷大，则意味着没有一个符合条件的硬币总数来更新它，本题无解，返回-1
+  if (f[amount] === Infinity) {
+    return -1;
+  }
+  // 若有解，直接返回解的内容
+  return f[amount];
+};
+
+// const arr = [1,3,5],
+//   target = 11;
+// console.log(coinsChange(arr, target));
+
+function dom2Json(domTree) {
+  let obj = {};
+  obj.tag = domTree.tagName;
+  obj.children = [];
+  if (domTree.childNodes) {
+    domTree.childNodes.forEach((child) => {
+      return obj.children.push(dom2Json(child));
+    });
+  }
+  return obj;
+}
+
+// const domtree = document.getElementById("domtree");
+
+// console.log(dom2Json(domtree));
+
+// {
+//   tag: 'DIV',
+//   children: [
+//     {
+//       tag: 'SPAN',
+//       children: [
+//         { tag: 'A', children: [] }
+//       ]
+//     },
+//     {
+//       tag: 'SPAN',
+//       children: [
+//         { tag: 'A', children: [] },
+//         { tag: 'A', children: [] }
+//       ]
+//     }
+//   ]
+// }
+
+//类数组转化为数组
+// const arrayLike=document.querySelectorAll('div')
+// console.log([...arrayLike])
+// console.log(Array.from(arrayLike))
+// console.log(Array.prototype.slice.call(arrayLike));
+// console.log(Array.prototype.concat.apply(arrayLike))
+// console.log(Array.apply(null,arrayLike))
+
+//Object.is实现  可用===
+Object.is = function (x, y) {
+  if (x === y) {
+    // 当前情况下，只有一种情况是特殊的，即 +0 -0
+    // 如果 x !== 0，则返回true
+    // 如果 x === 0，则需要判断+0和-0，则可以直接使用 1/+0 === Infinity 和 1/-0 === -Infinity来进行判断
+    return x !== 0 || 1 / x === 1 / y;
+  }
+
+  // x !== y 的情况下，只需要判断是否为NaN，如果x!==x，则说明x是NaN，同理y也一样
+  // x和y同时为NaN时，返回true
+  return x !== x && y !== y;
+};
+
+//AJAX
+
+function getJson(method, url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url, false);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200 || xhr.status === 304) {
+        resolve(xhr.responseText);
+      } else {
+        reject(new Error(xhr.responseText));
+      }
+    };
+    xhr.send();
+  });
+}
+
+//渲染百万条结构简单的大数据时 怎么使用分片思想优化渲染
+// let ul = document.getElementById("container");
+// let total = 100000;
+// let once = 20;
+// let page = total / once;
+// let index = 0;
+// function loop(curtotal, curIndex) {
+//   let pageCount = Math.min(curtotal, once);
+//   window.requestAnimationFrame(function () {
+//     for (let i = 0; i < pageCount; i++) {
+//       const li = document.createElement("li");
+//       li.innerText= `${curIndex+i}:${~~(Math.random() * total)}`;
+//       // li.innerText = curIndex + i + " : " + ~~(Math.random() * total);
+//       ul.appendChild(li);
+//     }
+//     loop(curtotal - pageCount, curIndex + pageCount);
+//   });
+// }
+// loop(total, index);
+
+//JSON 格式的虚拟 Dom 怎么转换成真实 Dom
+function JSON2Dom(vnode) {
+  const { tag, attrs, children } = vnode;
+  let dom = document.createElement(tag);
+  if (attrs) {
+    for (let key in attrs) {
+      if (attrs.hasOwnProperty(key)) {
+        dom.setAttribute(key, attrs[key]);
+      }
+    }
+  }
+  if (children.length > 0) {
+    children.forEach((item) => {
+      const child = JSON2Dom(item);
+      dom.appendChild(child);
+    });
+  }
+  return dom;
+}
+
+// const json = {
+//   tag: "DIV",
+//   attrs: {
+//     id: "app",
+//   },
+//   children: [
+//     {
+//       tag: "SPAN",
+//       children: [{ tag: "A", children: [] }],
+//     },
+//     {
+//       tag: "SPAN",
+//       children: [
+//         { tag: "A", children: [] },
+//         { tag: "A", children: [] },
+//       ],
+//     },
+//   ],
+// };
+
+// const dom=JSON2Dom(json)
+// let container = document.getElementById("container");
+// container.append(dom)
+
+//实现模板字符串解析功能
+function render(template, data) {
+  let reg = /\{\{(\w+)\}\}/g;
+  const str = template.replace(reg, function (match, key) {
+    return data[key];
+  });
+  return str;
+}
+// let template = "我是{{name}}，年龄{{age}}，性别{{sex}}";
+// let data = {
+//   name: "姓名",
+//   age: 18,
+// };
+// console.log(render(template, data)); // 我是姓名，年龄18，性别undefined
+//实现一个对象的flatten方法
+
+function isObj(obj) {
+  if (typeof obj === "object") return true;
+  return false;
+}
+//for...in循环读取键名，for...of循环读取键值
+function flattenObj(obj) {
+  if (!isObj(obj)) return new Error();
+  let newObj = {};
+  const dns = function (cur, prefix) {
+    if (isObj(cur)) {
+      if (Array.isArray(cur)) {
+        for (let key in cur) {
+          dns(cur[key], `${prefix}[${key}]`);
+        }
+      } else {
+        for (let key in cur) {
+          if (cur.hasOwnProperty(key)) {
+            dns(cur[key], `${prefix ? prefix + "." : ""}${key}`);
+          }
+        }
+      }
+    } else {
+      newObj[prefix] = cur;
+    }
+  };
+  dns(obj, "");
+  return newObj;
+}
+// const obj = {
+//   a: {
+//     b: 1,
+//     c: 2,
+//     d: { e: 5 },
+//   },
+//   b: [1, 3, { a: 2, b: 3 }],
+//   c: 3,
+// };
+
+// console.log(flattenObj(obj));
+// {
+//  'a.b': 1,
+//  'a.c': 2,
+//  'a.d.e': 5,
+//  'b[0]': 1,
+//  'b[1]': 3,
+//  'b[2].a': 2,
+//  'b[2].b': 3
+//   c: 3
+// }
+
+let a = "9007199254740991";
+let b = "4567899999999999";
+function add(a, b) {
+  const maxLength = Math.max(a.length, b.length);
+  a = a.padStart(maxLength, 0);
+  b = b.padStart(maxLength, 0);
+  let f = 0;
+  let sum = "";
+  for (let i = maxLength - 1; i >= 0; i--) {
+    const temp = parseInt(a[i]) + parseInt(b[i]) + f;
+    f = Math.floor(temp / 10);
+    sum = (temp % 10) + sum;
+  }
+  if (f !== 0) {
+    sum = f + sum;
+  }
+  return sum;
+}
+
+// console.log(add(a, b));
+//列表转成树形结构
+function list2tree(list) {
+  let treeData = [];
+  let temp = {};
+  let len = list.length;
+  for (let i = 0; i < len; i++) {
+    const item = list[i];
+    temp[item.id] = item;
+  }
+  for (let key in temp) {
+    const item = temp[key];
+    if (item.parentId != 0) {
+      if (!temp[item.parentId].children) {
+        temp[item.parentId].children = [];
+      }
+      temp[item.parentId].children.push(item);
+    } else {
+      treeData.push(item);
+    }
+  }
+  return treeData;
+}
+// const list = [
+//   {
+//     id: 1,
+//     text: "节点1",
+//     parentId: 0, //这里用0表示为顶级节点
+//   },
+//   {
+//     id: 2,
+//     text: "节点1_1",
+//     parentId: 0, //通过这个字段来确定子父级
+//   },
+//   {
+//     id: 3,
+//     text: "节点1_1",
+//     parentId: 1, //通过这个字段来确定子父级
+//   },
+//   {
+//     id: 4,
+//     text: "节点1_1",
+//     parentId: 1, //通过这个字段来确定子父级
+//   },
+// ];
+// list2tree(list);
+
+//树形结构转成列表 for...in不建议用于数组
+function tree2list(tree) {
+  let listData = [];
+  const dns = function (data) {
+    data.forEach((item) => {
+      const { children = [] } = item;
+      if (children.length > 0) {
+        dns(children);
+        delete item.children;
+      }
+      listData.push(item);
+    });
+  };
+  dns(tree);
+  return listData;
+}
+const tree = [
+  {
+    id: 1,
+    text: "节点1",
+    parentId: 0,
+    children: [
+      {
+        id: 2,
+        text: "节点1_1",
+        parentId: 1,
+      },
+      {
+        id: 3,
+        text: "节点1_1",
+        parentId: 1,
+      },
+    ],
+  },
+];
+tree2list(tree);
