@@ -16,6 +16,7 @@ no-store：缓存不应存储有关客户端请求或服务器响应的任何内
 协商缓存：last-modified/if-modified-since; etag/if-none-match
 
 ### HTTP 版本区别
+
 https://blog.csdn.net/m0_60360320/article/details/119812431
 
 HTTP/1.1
@@ -33,7 +34,7 @@ HTTP/2 是二进制协议而不是文本协议。不再可读，也不可无障�
 二进制分帧传输（就是将一条连接上所有传输的信息，分割为更小的消息和帧）
 多路复用（多路复用的基础就是二进制分帧，因为可以乱序发送和接收）
 头部压缩
-服务器推送（服务器可以对一个客户端请求发送多个响应，例如，浏览器向服务端请求index.html，里面包含一张样式表和一张图片。传统的方法就是会向浏览器发送三次请求。而服务端推送，则可以在一次请求内将这三个文件全部发送给浏览器，减少了请求次数，提升了网页性能。）
+服务器推送（服务器可以对一个客户端请求发送多个响应，例如，浏览器向服务端请求 index.html，里面包含一张样式表和一张图片。传统的方法就是会向浏览器发送三次请求。而服务端推送，则可以在一次请求内将这三个文件全部发送给浏览器，减少了请求次数，提升了网页性能。）
 
 ### HTTP 和 HTTPS
 
@@ -93,8 +94,7 @@ position: absolute
 position: fixed
 display: table-cell
 display: flex
-解决问题: 
-1.使用 Float 脱离文档流，高度塌陷
+解决问题: 1.使用 Float 脱离文档流，高度塌陷
 2.Margin 边距重叠
 
 ### 扇形 css
@@ -111,3 +111,11 @@ border-top-right-radius: 100px;
 当 URL 的片段标识符更改时，将触发 hashchange 事件 (跟在＃符号后面的 URL 部分，包括＃符号)
 history 路由
 需要注意的是调用 history.pushState()或 history.replaceState()不会触发 popstate 事件。只有在做出浏览器动作时，才会触发该事件，如用户点击浏览器的回退按钮（或者在 Javascript 代码中调用 history.back()或者 history.forward()方法）
+
+## 浏览器
+
+### setTimeout & requestAnimationFrame
+
+setTimeout 的执行时间并不是确定的。在 JS 中，setTimeout 任务被放进事件队列中，只有主线程执行完才会去检查事件队列中的任务是否需要执行，因此 setTimeout 的实际执行时间可能会比其设定的时间晚一些。
+刷新频率受屏幕分辨率和屏幕尺寸的影响，因此不同设备的刷新频率可能会不同，而 setTimeout 只能设置一个固定时间间隔，这个时间不一定和屏幕的刷新时间相同。在 setTimeout 中对 dom 进行操作，必须要等到屏幕下次绘制时才能更新到屏幕上，如果两者步调不一致，就可能导致中间某一帧的操作被跨越过去，而直接更新下一帧的元素，从而导致丢帧现象。
+与 setTimeout 相比，requestAnimationFrame 最大的优势是由系统来决定回调函数的执行时机。它能保证回调函数在屏幕每一次的刷新间隔中只被执行一次，这样就不会引起丢帧现象。

@@ -157,16 +157,16 @@ const str = "({}]{}";
 // console.log(valid(str));
 //零钱兑换
 function coinsChange(coins, mount) {
-  let memo = Array(mount+1).fill(Infinity);
+  let memo = Array(mount + 1).fill(Infinity);
   memo[0] = 0;
   for (let i = 1; i <= mount; i++) {
     for (let j = 0; j < coins.length; j++) {
       if (i - coins[j] >= 0) {
-        console.log(166,i,j)
+        console.log(166, i, j);
         memo[i] = Math.min(memo[i], memo[i - coins[j]] + 1);
       }
     }
-  } 
+  }
   return memo[mount] === Infinity ? -1 : memo[mount];
 }
 const coinChange = function (coins, amount) {
@@ -200,14 +200,27 @@ const coinChange = function (coins, amount) {
 
 // console.log(coinsChange(coins, mount));
 //不同路径
-function difPaths(m,n){
-let res=Array(m).fill(Array(n).fill(1))
-for(let i=1;i<m;i++){
-  for(let j=1;j<n;j++){
-    res[i][j]=res[i][j-1]+res[i-1][j]
+function difPaths(m, n) {
+  let res = Array(m).fill(Array(n).fill(1));
+  for (let i = 1; i < m; i++) {
+    for (let j = 1; j < n; j++) {
+      res[i][j] = res[i][j - 1] + res[i - 1][j];
+    }
   }
+  return res[m - 1][n - 1];
 }
-return res[m-1][n-1]
+// const m=7,n=3;
+// console.log(difPaths(m,n))
+
+//买卖股票的最佳时机
+function maxProfit(prices) {
+  let profit = 0;
+  for (let i = 0; i < prices.length - 1; i++) {
+    if (prices[i + 1] > prices[i]) {
+      profit += prices[i + 1] - prices[i];
+    }
+  }
+  return profit;
 }
-const m=7,n=3;
-console.log(difPaths(m,n))
+const prices = [7,6,4,7,8]
+console.log(maxProfit(prices));

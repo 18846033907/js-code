@@ -962,12 +962,14 @@ function getJson(method, url) {
 // function loop(curtotal, curIndex) {
 //   let pageCount = Math.min(curtotal, once);
 //   window.requestAnimationFrame(function () {
+// let fragment = document.createDocumentFragment();
 //     for (let i = 0; i < pageCount; i++) {
 //       const li = document.createElement("li");
 //       li.innerText= `${curIndex+i}:${~~(Math.random() * total)}`;
 //       // li.innerText = curIndex + i + " : " + ~~(Math.random() * total);
-//       ul.appendChild(li);
+//       fragment.appendChild(li);
 //     }
+//     ul.appendChild(fragment);
 //     loop(curtotal - pageCount, curIndex + pageCount);
 //   });
 // }
@@ -1165,23 +1167,23 @@ function tree2list(tree) {
   dns(tree);
   return listData;
 }
-const tree = [
-  {
-    id: 1,
-    text: "节点1",
-    parentId: 0,
-    children: [
-      {
-        id: 2,
-        text: "节点1_1",
-        parentId: 1,
-      },
-      {
-        id: 3,
-        text: "节点1_1",
-        parentId: 1,
-      },
-    ],
-  },
-];
-tree2list(tree);
+// const tree = [
+//   {
+//     id: 1,
+//     text: "节点1",
+//     parentId: 0,
+//     children: [
+//       {
+//         id: 2,
+//         text: "节点1_1",
+//         parentId: 1,
+//       },
+//       {
+//         id: 3,
+//         text: "节点1_1",
+//         parentId: 1,
+//       },
+//     ],
+//   },
+// ];
+// tree2list(tree);
