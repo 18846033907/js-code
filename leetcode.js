@@ -222,5 +222,24 @@ function maxProfit(prices) {
   }
   return profit;
 }
-const prices = [7,6,4,7,8]
-console.log(maxProfit(prices));
+// const prices = [7,6,4,7,8]
+// console.log(maxProfit(prices));
+
+function pubFront(strs) {
+  if (Object.prototype.toString.call(strs) !== "[object Array]")
+    throw new TypeError("this is not an array");
+  let str = strs.length > 0 ? strs[0] : "";
+  for (let key in strs) {
+    if (str === "") break;
+    const item = strs[key];
+    while (!item.includes(str)) {
+      if (str === "") break;
+      str = str.substring(0, str.length - 1);
+    }
+  }
+  return str;
+}
+// const strs = ["dog","racecar","car"]
+// console.log(pubFront(strs));
+
+

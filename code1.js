@@ -126,6 +126,18 @@ function compose(...args) {
   });
 }
 
+// function compose(...args) {
+//   let result;
+//   return function (x) {
+//     result = x;
+//     while (args.length > 0) {
+//       result = args.pop()(result);
+//     }
+//     return result;
+//   };
+// }
+
+
 // 用法如下:
 // function fn1(x) {
 //   return x + 1;
@@ -847,31 +859,31 @@ function getN(num, target) {
 //   return result;
 // }
 
-const coinChange = function (coins, amount) {
-  // 用于保存每个目标总额对应的最小硬币个数
-  const f = [];
-  // 提前定义已知情况
-  f[0] = 0;
-  // 遍历 [1, amount] 这个区间的硬币总额
-  for (let i = 1; i <= amount; i++) {
-    // 求的是最小值，因此我们预设为无穷大，确保它一定会被更小的数更新
-    f[i] = Infinity;
-    // 循环遍历每个可用硬币的面额
-    for (let j = 0; j < coins.length; j++) {
-      // 若硬币面额小于目标总额，则问题成立
-      if (i - coins[j] >= 0) {
-        // 状态转移方程
-        f[i] = Math.min(f[i], f[i - coins[j]] + 1);
-      }
-    }
-  }
-  // 若目标总额对应的解为无穷大，则意味着没有一个符合条件的硬币总数来更新它，本题无解，返回-1
-  if (f[amount] === Infinity) {
-    return -1;
-  }
-  // 若有解，直接返回解的内容
-  return f[amount];
-};
+// const coinChange = function (coins, amount) {
+//   // 用于保存每个目标总额对应的最小硬币个数
+//   const f = [];
+//   // 提前定义已知情况
+//   f[0] = 0;
+//   // 遍历 [1, amount] 这个区间的硬币总额
+//   for (let i = 1; i <= amount; i++) {
+//     // 求的是最小值，因此我们预设为无穷大，确保它一定会被更小的数更新
+//     f[i] = Infinity;
+//     // 循环遍历每个可用硬币的面额
+//     for (let j = 0; j < coins.length; j++) {
+//       // 若硬币面额小于目标总额，则问题成立
+//       if (i - coins[j] >= 0) {
+//         // 状态转移方程
+//         f[i] = Math.min(f[i], f[i - coins[j]] + 1);
+//       }
+//     }
+//   }
+//   // 若目标总额对应的解为无穷大，则意味着没有一个符合条件的硬币总数来更新它，本题无解，返回-1
+//   if (f[amount] === Infinity) {
+//     return -1;
+//   }
+//   // 若有解，直接返回解的内容
+//   return f[amount];
+// };
 
 // const arr = [1,3,5],
 //   target = 11;
@@ -934,8 +946,48 @@ Object.is = function (x, y) {
   return x !== x && y !== y;
 };
 
-//AJAX
+const jsonp = ({ url, params, callbackName }) => {
+  const generateURL = () => {
+    let dataStr = "";
+    for (let key in params) {
+      dataStr += `${key}=${params[key]}&`;
+    }
+    dataStr += `callback=${callbackName}`;
+    return `${url}?${dataStr}`;
+  };
+  return new Promise((resolve, reject) => {
+    // 初始化回调函数名称
+    callbackName = callbackName;
+    // 创建 script 元素并加入到当前文档中
+    let scriptEle = document.createElement("script");
+    scriptEle.src = generateURL();
+    document.body.appendChild(scriptEle);
+    window[callbackName] = (data) => {
+      console.log(55, data);
+    };
+    // 绑定到 window 上，为了后面调用
+    window[callbackName] = (data) => {
+      resolve(data);
+      // script 执行完了，成为无用元素，需要清除
+      document.body.removeChild(scriptEle);
+    };
+  });
+};
 
+// jsonp({
+//   url: 'http://localhost:3000',
+//   params: {
+//     a: 1,
+//     b: 2
+//   },
+//   callbackName:'callbackName'
+// })
+// .then(data => {
+//   // 拿到数据进行处理
+//   console.log(data); // 数据包
+// })
+
+//AJAX
 function getJson(method, url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -990,6 +1042,28 @@ function JSON2Dom(vnode) {
     children.forEach((item) => {
       const child = JSON2Dom(item);
       dom.appendChild(child);
+    });
+  }
+  return dom;
+}
+
+function _render(vnode) {
+  if (typeof vnode === "number") {
+    vnode = String(vnode);
+  }
+  if (typeof vnode === "string") {
+    return document.createTextNode(vnode);
+  }
+  const dom = document.createElement(vnode.tag);
+  if (vnode.attrs) {
+    Object.keys(vnode.attrs).forEach((key) => {
+      const value = vnode.attrs[key];
+      dom.setAttribute(key, value);
+    });
+  }
+  if (vnode.children.length > 0) {
+    vnode.children.forEach((item) => {
+      dom.appendChild(_render(item));
     });
   }
   return dom;

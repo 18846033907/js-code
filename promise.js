@@ -8,7 +8,7 @@
 const PENDING = "pending";
 const FULFILLED = "fulfilled";
 const REJECTED = "rejected";
-class MyPromise {
+class MyPromise1 {
   constructor(executor) {
     // this = this;
     this.status = PENDING;
