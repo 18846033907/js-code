@@ -278,4 +278,199 @@ function getType(param) {
 // console.log(_add(3));
 
 //JSONP
-function jsonp({ url, params, callbackName }) {}
+function jsonp({ url, params, callbackName }) {
+  const generateURL = () => {
+    let dataUrl = "";
+    let endUrl = "";
+    for (let key in params) {
+      if (params.hasOwnProperty(key)) {
+        dataUrl += `${key}=${params[key]}&`;
+      }
+    }
+    endUrl = `${url}?${dataUrl}callback=${callbackName}`;
+    return endUrl;
+  };
+
+  return new Promise((resolve, reject) => {
+    const scrEl = document.createElement("script");
+    scrEl.src = generateURL();
+    document.body.appendChild(scrEl);
+    window[callbackName] = (data) => {
+      resolve(data);
+      document.body.removeChild(scrEl);
+    };
+  });
+}
+
+// jsonp({
+//   url: "http://127.0.0.1:3000/",
+//   params: { a: "1", b: "2" },
+//   callbackName: "cb",
+// }).then((data) => {
+//   console.log(data);
+// });
+
+//AJAX
+function getJson(method, url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url, false);
+    xhr.setRequestHeader("Content-header", "application/json");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200 || xhr.status === 304) {
+        resolve(xhr.responseText);
+      } else {
+        reject(new Error(xhr.responseText));
+      }
+    };
+    xhr.send();
+  });
+}
+
+//数组原型方法 forEach map filter some reduce
+Array.prototype.forEach2 = function (cb, thisArg) {
+  if (getType(this) !== "array") throw new Error("this is not an array");
+  if (typeof cb !== "function") {
+    throw new TypeError(cb + " is not a function");
+  }
+  let self = this,
+    len = self.length;
+  for (let i = 0; i < len; i++) {
+    const cur = self[i];
+    cb.call(thisArg, cur, i, self);
+  }
+};
+// const arr = [1, 2, 3, 4].forEach2(function (item) {
+//   return item*2
+// });
+// console.log(arr);
+
+Array.prototype.map2 = function (cb, thisArg) {
+  if (getType(this) !== "array") throw new Error("this is not an array");
+  if (typeof cb !== "function") {
+    throw new TypeError(cb + " is not a function");
+  }
+  let self = this,
+    len = self.length,
+    arr = [];
+  for (let i = 0; i < len; i++) {
+    const cur = self[i];
+    arr.push(cb.call(thisArg, cur, i, self));
+  }
+  return arr;
+};
+// const arr = [1, 2, 3, 4].map2(function (item) {
+//    return item*2
+// });
+// console.log(arr);
+
+Array.prototype.filter2 = function (cb, thisArg) {
+  if (getType(this) !== "array") throw new Error("this is not an array");
+  if (typeof cb !== "function") {
+    throw new TypeError(cb + " is not a function");
+  }
+  let self = this,
+    len = self.length,
+    arr = [];
+  for (let i = 0; i < len; i++) {
+    const cur = self[i];
+    const res = cb.call(thisArg, cur, i, self);
+    if (res) {
+      arr.push(cur);
+    }
+  }
+  return arr;
+};
+// const arr = [1, 2, 3, 4].filter2(function (item) {
+//   return item===2;
+// });
+// console.log(arr);
+
+Array.prototype.some2 = function (cb, thisArg) {
+  if (getType(this) !== "array") throw new Error("this is not an array");
+  if (typeof cb !== "function") {
+    throw new TypeError(cb + " is not a function");
+  }
+  let self = this,
+    len = self.length,
+    result = false;
+  for (let i = 0; i < len; i++) {
+    const cur = self[i];
+    const res = cb.call(thisArg, cur, i, self);
+    if (res) {
+      result = true;
+    }
+  }
+  return result;
+};
+// const arr = [1, 2, 3, 4].some2(function (item) {
+//   return item===2;
+// });
+// console.log(arr);
+
+Array.prototype.reduce2 = function (cb, initialValue) {
+  if (getType(this) !== "array") throw new Error("this is not an array");
+  if (typeof cb !== "function") {
+    throw new TypeError(cb + " is not a function");
+  }
+  let self = this,
+    len = self.length,
+    pre = self[0],
+    init = 1;
+  if (arguments.length > 1) {
+    pre = initialValue;
+    init = 0;
+  }
+  for (let i = init; i < len; i++) {
+    const cur = self[i];
+    pre = cb(pre, cur, i, self);
+  }
+  return pre;
+};
+
+// const arr = [1, 2, 3, 4].reduce2(function (pre, cur) {
+//   return pre + cur;
+// }, 10);
+// console.log(arr);
+
+//实现函数原型方法 call apply bind
+
+Function.prototype.call2 = function (ctx, ...args) {
+  ctx = window || ctx;
+  if (typeof this !== "function")
+    throw new Error("this is not be called by a function");
+  const fn = Symbol();
+  ctx[fn] = this;
+  const result = ctx[fn](...args);
+  delete ctx[fn];
+  return result;
+};
+
+Function.prototype.apply2 = function (ctx, args) {
+  ctx = window || ctx;
+  if (typeof this !== "function")
+    throw new Error("this is not be called by a function");
+  const fn = Symbol();
+  ctx[fn] = this;
+  const result = ctx[fn](...args);
+  delete ctx[fn];
+  return result;
+};
+
+Function.prototype.bind2 = function (ctx, ...args) {
+  ctx = window || ctx;
+  if (typeof this !== "function")
+    throw new Error("this is not be called by a function");
+  const self = this;
+
+  const bound = function (...arg) {
+    return self.call(ctx,...args, ...arg);
+  };
+  return bound;
+};
+function parent(a,b) {
+  console.log(this.name, this.age,a,b);
+}
+const obj = { name: "hh", age: "tt" };
+console.log(parent.bind2(obj,'a','b')());

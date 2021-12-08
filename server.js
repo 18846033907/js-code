@@ -6,6 +6,6 @@ app.get('/', function(req, res) {
   console.log(b); // 2
   console.log(callback)
   // 注意哦，返回给script标签，浏览器直接把这部分字符串执行
-  res.end(`${callback}('数据包')`);
+  res.end(`${callback}('数据')`);
 })
 app.listen(3000)
