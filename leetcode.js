@@ -279,28 +279,71 @@ function selectSort(arr) {
 // const arr = [2, 1, 4, 3];
 // console.log(selectSort(arr));
 //插入排序，在当前项前面找一个大于自己的位置
+function swap(arr, i, j) {
+  const temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp;
+}
+// function InsertSort(arr) {
+//   let len = arr.length;
+//   for (let i = 1; i < len; i++) {
+//     for (let j = i; j > 0; j--) {
+//       if (arr[j] < arr[j - 1]) {
+//         swap(arr, j, j - 1);
+//       } else {
+//         break;
+//       }
+//     }
+//   }
+//   return arr;
+// }
+
 function InsertSort(arr) {
-  let len = arr.length;
-  let preIndex, cur;
+  let len = arr.length,
+    minIndex,
+    cur;
   for (let i = 1; i < len; i++) {
-    preIndex = i - 1;
+    minIndex = i - 1;
     cur = arr[i];
-    while (preIndex >= 0 && arr[preIndex] > cur) {
-      const temp = arr[preIndex];
-      arr[preIndex] = arr[preIndex + 1];
-      arr[preIndex + 1] = temp;
-      preIndex--;
+    while (arr[minIndex] > cur && minIndex >= 0) {
+      const temp = arr[minIndex + 1];
+      arr[minIndex + 1] = arr[minIndex];
+      arr[minIndex] = temp;
+      minIndex--;
     }
   }
   return arr;
 }
 
-// const arr = [2, 1, 4, 3];
+// const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
 // console.log(InsertSort(arr));
 //快排
-function quickSort(arr){
-
+function quickSort(arr) {
+  const len = arr.length;
+  return _quickSort(arr, 0, len);
 }
+function _quickSort(arr, l, r) {
+  if (arr.length < 2) return;
+  if (l < r) {
+    const p = partition(arr, l, r);
+    _quickSort(arr, l, p - 1);
+    _quickSort(arr, p + 1, r);
+  }
+
+  return arr;
+}
+function partition(arr, l, r) {
+  let j = l;
+  for (let i = l + 1; i < r; i++) {
+    if (arr[i] < arr[l]) {
+      swap(arr, ++j, i);
+    }
+  }
+  swap(arr, j, l);
+  return j;
+}
+const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
+console.log(quickSort(arr));
 //归并排序
 function mergeSort(arr) {
   let len = arr.length;
@@ -330,5 +373,5 @@ function merge(left, right) {
   }
   return result;
 }
-const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
-console.log(mergeSort(arr));
+// const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
+// console.log(mergeSort(arr));
