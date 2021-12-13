@@ -242,4 +242,93 @@ function pubFront(strs) {
 // const strs = ["dog","racecar","car"]
 // console.log(pubFront(strs));
 
+//冒泡排序，层层遍历若后面大于前面则交换相邻
+function bubbleSort(arr) {
+  let len = arr.length;
+  for (let i = 0; i < len; i++) {
+    for (let j = 0; j < len; j++) {
+      const temp = arr[j];
+      if (arr[j] > arr[j + 1]) {
+        arr[j] = arr[j + 1];
+        arr[j + 1] = temp;
+      }
+    }
+  }
+  return arr;
+}
+// const arr = [2, 1, 4, 3];
+// console.log(bubbleSort(arr));
+//选择排序,选择当前项后面的最小项进行交换
+function selectSort(arr) {
+  let len = arr.length;
+  for (let i = 0; i < len; i++) {
+    let minIndex = i;
+    for (let j = i + 1; j < len; j++) {
+      if (arr[j] < arr[minIndex]) {
+        minIndex = j;
+      }
+    }
+    if (arr[i] > arr[minIndex]) {
+      const temp = arr[i];
+      arr[i] = arr[minIndex];
+      arr[minIndex] = temp;
+    }
+  }
+  return arr;
+}
+// const arr = [2, 1, 4, 3];
+// console.log(selectSort(arr));
+//插入排序，在当前项前面找一个大于自己的位置
+function InsertSort(arr) {
+  let len = arr.length;
+  let preIndex, cur;
+  for (let i = 1; i < len; i++) {
+    preIndex = i - 1;
+    cur = arr[i];
+    while (preIndex >= 0 && arr[preIndex] > cur) {
+      const temp = arr[preIndex];
+      arr[preIndex] = arr[preIndex + 1];
+      arr[preIndex + 1] = temp;
+      preIndex--;
+    }
+  }
+  return arr;
+}
 
+// const arr = [2, 1, 4, 3];
+// console.log(InsertSort(arr));
+//快排
+function quickSort(arr){
+
+}
+//归并排序
+function mergeSort(arr) {
+  let len = arr.length;
+  if (len < 2) {
+    return arr;
+  }
+  let middle = Math.floor(len / 2);
+  let left = arr.slice(0, middle);
+  let right = arr.slice(middle, len);
+  return merge(mergeSort(left), mergeSort(right));
+}
+
+function merge(left, right) {
+  let result = [];
+  while (left.length > 0 && right.length > 0) {
+    if (left[0] <= right[0]) {
+      result.push(left.shift());
+    } else {
+      result.push(right.shift());
+    }
+  }
+  while (left.length > 0) {
+    result.push(left.shift());
+  }
+  while (right.length > 0) {
+    result.push(right.shift());
+  }
+  return result;
+}
+const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
+console.log(mergeSort(arr));

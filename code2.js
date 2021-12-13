@@ -459,18 +459,111 @@ Function.prototype.apply2 = function (ctx, args) {
 };
 
 Function.prototype.bind2 = function (ctx, ...args) {
-  ctx = window || ctx;
+  ctx = ctx || window;
   if (typeof this !== "function")
     throw new Error("this is not be called by a function");
-  const self = this;
-
+  let self = this;
   const bound = function (...arg) {
-    return self.call(ctx,...args, ...arg);
+    if (this instanceof bound) {
+      return self.call(this, ...args, ...arg);
+    } else {
+      return self.call(ctx, ...args, ...arg);
+    }
   };
+  if (self.prototype) {
+    bound.prototype = Object.create(self.prototype);
+  }
   return bound;
 };
-function parent(a,b) {
-  console.log(this.name, this.age,a,b);
+// function parent(a, b) {
+//   console.log(this.name, this.age, a, b);
+// }
+// const obj = { name: "hh", age: "tt" };
+// const fn = parent.bind2(obj, "a", "b");
+// function Parent(a, b) {
+//   console.log(this.name, this.age, a, b);
+// }
+// Parent.prototype.sayName = function () {
+//   console.log("sayName");
+// };
+// const obj = { name: "hh", age: "tt" };
+// const Child = Parent.bind2(obj, "a", "b");
+// const c1 = new Child();
+// console.log(c1.sayName());
+
+//实现new关键字
+function myNew(cur, ...args) {
+  const obj = new Object();
+  obj.__proto__ = cur.prototype;
+  const res = cur.apply(obj, args);
+  if (typeof res === "object" || typeof res === "function") return res;
+  return obj;
 }
-const obj = { name: "hh", age: "tt" };
-console.log(parent.bind2(obj,'a','b')());
+//实现instanceof关键字
+function instansof2(left, right) {
+  const prototype = right.prototype;
+  while (true) {
+    const proto = Object.getPrototypeOf(left);
+    if (proto === null) return false;
+    if (proto === prototype) return true;
+    left = proto;
+  }
+}
+// console.log(instansof2([], Function));
+//实现Object.create
+Object.create2 = function (proto, propertiesObject) {
+  if (typeof proto !== "object" && typeof proto !== "function") {
+    throw new TypeError("Object prototype may only be an Object or null.");
+  }
+  if (propertyObject == null) {
+    //双等号
+    new TypeError("Cannot convert undefined or null to object");
+  }
+  let obj = new Object();
+  obj.__proto__ = proto;
+  if (propertiesObject) {
+    obj = Object.defineProperties(obj, propertiesObject);
+  }
+  return obj;
+};
+// const person = {
+//   isHuman: false,
+//   printIntroduction: function() {
+//     console.log(`My name is ${this.name}. Am I human? ${this.isHuman}`);
+//   }
+// };
+
+// const me = Object.create2(person);
+
+// me.name = 'Matthew'; // "name" is a property set on "me", but not on "person"
+// me.isHuman = true; // inherited properties can be overwritten
+
+// me.printIntroduction();
+//实现Object.assign
+Object.assign2 = function (target, ...sources) {
+  let obj = target;
+  let len = sources.length;
+  for (let i = 0; i < len; i++) {
+    const cur = sources[i];
+    if (getType(cur) === "object") {
+      for (let key in cur) {
+        if (cur.hasOwnProperty(key)) {
+          obj[key] = cur[key];
+        }
+      }
+    } else {
+      throw new Error();
+    }
+  }
+  return obj;
+};
+// const target = { a: 1, b: 2 };
+// const source = { b: 4, c: 5 };
+
+// const returnedTarget = Object.assign(target, source);
+
+// console.log(target);
+// // expected output: Object { a: 1, b: 4, c: 5 }
+
+// console.log(returnedTarget);
+// // expected output: Object { a: 1, b: 4, c: 5 }
