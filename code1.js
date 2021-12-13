@@ -664,7 +664,7 @@ function renderBigData() {
   let ul = document.getElementById("ul");
   function loop() {
     if (index > page) return;
-    let pageCount = Math.min(pageSize,total-pageSize*index);
+    let pageCount = Math.min(pageSize, total - pageSize * index);
     const frag = document.createDocumentFragment();
     for (let i = 0; i < pageCount; i++) {
       const li = document.createElement("li");
@@ -681,3 +681,87 @@ function renderBigData() {
 }
 // renderBigData();
 //将虚拟Dom转化为真实Dom
+function json2dom(vnode) {
+  if (typeof vnode === "number") {
+    vnode = String(vnode);
+  }
+  if (typeof vnode === "string") {
+    return document.createTextNode(vnode);
+  }
+  const { tag, attrs, children } = vnode;
+  const dom = document.createElement(tag);
+  if (attrs) {
+    for (let key in attrs) {
+      if (attrs.hasOwnProperty(key)) {
+        dom.setAttrbute(key, attrs[key]);
+      }
+    }
+  }
+  if (children.length > 0) {
+    children.forEach((child) => dom.appendChild(json2dom(child)));
+  }
+}
+
+//实现模板解析字符串
+function parseStr(str, data) {
+  const reg = /\{\{(\w+)\}\}/g;
+  return str.replace(reg, function (match, key) {
+    return data[key];
+  });
+}
+// const str = "我是{{name}},性别{{sex}},年龄{{age}}";
+// const obj = { name: "ll", age: 9, sex: "男" };
+// console.log(parseStr(str, obj));
+
+//实现一个对象的flatten方法
+function flattenObj(obj) {
+  //判断是否是对象
+  let res = {};
+  const dns = function (cur, prefix) {
+    if (typeof cur === "object") {
+      if (Array.isArray(cur)) {
+        cur.forEach((item, index) => {
+          dns(item, `${prefix}[${index}]`);
+        });
+      } else {
+        for (let key in cur) {
+          if (cur.hasOwnProperty(key)) {
+            dns(cur[key], `${prefix}${prefix ? "." : ""}${key}`);
+          }
+        }
+      }
+    } else {
+      res[prefix] = cur;
+    }
+  };
+  dns(obj, "");
+  return res;
+}
+// const obj = {
+//   a: {
+//          b: 1,
+//          c: 2,
+//          d: {e: 5}
+//      },
+//   b: [1, 3, {a: 2, b: 3}],
+//   c: 3
+//  }
+
+//  console.log(flattenObj(obj))
+// {
+//  'a.b': 1,
+//  'a.c': 2,
+//  'a.d.e': 5,
+//  'b[0]': 1,
+//  'b[1]': 3,
+//  'b[2].a': 2,
+//  'b[2].b': 3
+//   c: 3
+// }
+
+//列表转成树形结构
+function list2tree(list) {}
+//树形结构转成列表
+function tree2list(tree) {}
+//大数相加
+function bigAdd(n1, n2) {}

@@ -15,6 +15,9 @@ no-store：缓存不应存储有关客户端请求或服务器响应的任何内
 到期
 协商缓存：last-modified/if-modified-since; etag/if-none-match
 
+当 ctrl+f5 强制刷新网页时，直接从服务器加载，跳过强缓存和协商缓存；
+当 f5刷新网页时，跳过强缓存，但是会检查协商缓存；
+
 ### HTTP 版本区别
 
 https://blog.csdn.net/m0_60360320/article/details/119812431
