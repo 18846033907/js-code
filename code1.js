@@ -760,8 +760,131 @@ function flattenObj(obj) {
 // }
 
 //列表转成树形结构
-function list2tree(list) {}
+function list2tree(list) {
+  let res = [];
+  const getChildren = (id, list) => {
+    const children = [];
+    for (let node of list) {
+      const { pid } = node;
+      if (id === pid) {
+        children.push(node);
+      }
+    }
+    for (let node of children) {
+      const children = getChildren(node.id, list);
+      if (children.length > 0) {
+        node.children = children;
+      }
+    }
+    return children;
+  };
+  for (let node of list) {
+    const { id, pid } = node;
+    if (!pid) {
+      const p = { ...node };
+      p.children = getChildren(id, list);
+      res.push(p);
+    }
+  }
+  return res;
+}
+const listData = [
+  {
+    id: "p1",
+    title: "广东",
+  },
+  {
+    id: "p1-1",
+    pid: "p1",
+    title: "广州",
+  },
+  {
+    id: "p2",
+    title: "四川",
+  },
+  {
+    id: "p2-1",
+    pid: "p2",
+    title: "成都",
+  },
+  {
+    id: "p2-2",
+    pid: "p2",
+    title: "德阳",
+  },
+  {
+    id: "p2-3",
+    pid: "p2",
+    title: "绵阳",
+  },
+  {
+    id: "p2-1-1",
+    pid: "p2-1",
+    title: "高新区",
+  },
+];
+console.log(list2tree(listData));
+
 //树形结构转成列表
-function tree2list(tree) {}
+function tree2list(tree) {
+  let list = [];
+  const dns = (data) => {
+    for (let node of data) {
+      const { id, title, children } = node;
+      list.push({ id, title });
+      if (children) {
+        dns(children);
+      }
+    }
+  };
+  dns(tree);
+  return list;
+}
+const treeData = [
+  {
+    id: "p1",
+    title: "广东",
+    children: [
+      {
+        id: "p1-1",
+        title: "广州",
+      },
+    ],
+  },
+  {
+    id: "p2",
+    title: "四川",
+    children: [
+      {
+        id: "p2-1",
+        title: "成都",
+        children: [
+          {
+            id: "p2-1-1",
+            title: "高新区",
+          },
+        ],
+      },
+      {
+        id: "p2-2",
+        title: "德阳",
+      },
+      {
+        id: "p2-3",
+        title: "绵阳",
+      },
+    ],
+  },
+];
+// console.log(tree2list(treeData));
+
 //大数相加
 function bigAdd(n1, n2) {}
+
+//原型链判断
+Object.prototype.__proto__; //null
+Function.prototype.__proto__; //Object.prototype
+Object.__proto__; //Function.prototype
+Object instanceof Function; //true
+Function instanceof Object; //true
+Function.prototype === Function.__proto__; //true
