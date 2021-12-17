@@ -18,6 +18,9 @@ no-store：缓存不应存储有关客户端请求或服务器响应的任何内
 当 ctrl+f5 强制刷新网页时，直接从服务器加载，跳过强缓存和协商缓存；
 当 f5刷新网页时，跳过强缓存，但是会检查协商缓存；
 
+### cookie
+跨域传输：后端需设置Access-Control-Allow-Origin 为当前web域名，不能设为*。Access-Control-Allow-Credentials设置为true
+前端： withCredentials: true,
 ### HTTP 版本区别
 
 https://blog.csdn.net/m0_60360320/article/details/119812431
