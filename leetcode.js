@@ -206,6 +206,28 @@ function twoSum(nums, target) {
 
 // console.log(twoSum([1, 3, 5], 8));
 
+function threeSum(arr) {
+  let len = arr.length;
+  let newArr = [];
+  for (let i = 0; i < len; i++) {
+    let l = i + 1;
+    let r = len - 1;
+    const cur = arr[i];
+    while (l < r) {
+      if (cur + arr[l] + arr[r] === 0) {
+        newArr[newArr.length]=[cur, arr[l], arr[r]];
+        break;
+      } else if (cur + arr[r] + arr[l] > 0) {
+        r--;
+      } else {
+        l++;
+      }
+    }
+  }
+  return newArr;
+}
+console.log(44, threeSum([-4, -1, -1, 0, 1, 2]));
+
 function ListNode(val, next) {
   this.val = val === undefined ? 0 : val;
   this.next = next === undefined ? null : next;
@@ -285,9 +307,9 @@ function longestPil(s) {
     h(i - 1, i + 1);
     h(i, i + 1);
   }
-  return s.substring(start,start+maxLength)
+  return s.substring(start, start + maxLength);
 }
-console.log(longestPil('abcbdbd'))
+console.log(longestPil("abcbdbd"));
 
 //冒泡排序，层层历若后面大于前面则交换相邻
 function bubbleSort(arr) {
