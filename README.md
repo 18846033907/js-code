@@ -19,7 +19,8 @@ no-store：缓存不应存储有关客户端请求或服务器响应的任何内
 当 f5刷新网页时，跳过强缓存，但是会检查协商缓存；
 
 ### cookie
-跨域传输：后端需设置Access-Control-Allow-Origin 为当前web域名，不能设为*。Access-Control-Allow-Credentials设置为true
+跨域传输：
+后端：需设置Access-Control-Allow-Origin 为当前web域名，不能设为*。Access-Control-Allow-Credentials设置为true
 前端： withCredentials: true,
 ### HTTP 版本区别
 
@@ -111,6 +112,15 @@ background-color: red;
 width: 100px;
 height: 100px;
 border-top-right-radius: 100px;
+### CSS优先级
+第一优先级：!important 会覆盖页面内任何位置的元素样式
+1.内联样式，如 style="color: green"，权值为 1000
+2.ID 选择器，如#app，权值为 0100
+3.类、伪类、属性选择器，如.foo, :first-child, div[class="foo"]，权值为 0010
+4.标签、伪元素选择器，如 div::first-line，权值为 0001
+5.通配符、子类选择器、兄弟选择器，如*, >, +，权值为 0000
+6.继承的样式没有权值
+
 
 ## 路由
 
