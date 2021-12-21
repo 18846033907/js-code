@@ -94,18 +94,29 @@ function flatten(arr) {
     return Array.isArray(cur) ? [...pre, ...flatten(cur)] : [...pre, cur];
   }, []);
 }
-function flatten1(arr) {
-  while (
-    arr.some((item) => {
-      return Array.isArray(item);
-    })
-  ) {
-    arr = [].concat(...arr);
+function flatten1(arr, deep) {
+  let newArr = arr;
+  if (deep > 0) {
+    while (
+      newArr.some((item) => {
+        return Array.isArray(item);
+      }) &&
+      deep > 0
+    ) {
+      newArr = [].concat(...newArr);
+      deep--;
+    }
+  } else {
+    newArr = newArr.reduce((pre, cur) => {
+      return Array.isArray(cur) ? [...pre, ...flatten(cur)] : [...pre, cur];
+    }, []);
   }
-  return arr;
+
+  return newArr;
 }
 
-// const flattenArr=[2,3,[3,4,5],4,[8,4],[8,[9,3]]]
+const flattenArr = [2, 3, [3, 4, 5], 4, [8, 4], [8, [9, 3]]];
+console.log(flatten1(flattenArr, 1));
 // console.log(flatten(flattenArr),flatten1(flattenArr))
 
 //寄生组合继承

@@ -22,6 +22,7 @@ no-store：缓存不应存储有关客户端请求或服务器响应的任何内
 跨域传输：
 后端：需设置Access-Control-Allow-Origin 为当前web域名，不能设为*。Access-Control-Allow-Credentials设置为true
 前端： withCredentials: true,
+'a.test.com'与'b.test.com'  cookie共享可以用domain设为 '.test.com'
 ### HTTP 版本区别
 
 https://blog.csdn.net/m0_60360320/article/details/119812431
@@ -141,3 +142,9 @@ setTimeout 的执行时间并不是确定的。在 JS 中，setTimeout 任务被
 单例模式：全局对象，全局信息提示；
 代理模式：axios拦截；在返回真正信息前做预处理；
 策略模式：策略类，ABCD四个职级工资不同；
+## 性能优化
+抽离公共组件；细化组件
+koa自定义服务器在未渲染页面之前重定向
+webpack压缩css，js，
+配置exclude/include缩小打包范围
+url-loader,image小于8k转为base64，image如果有可能的话用svg或者css动画
