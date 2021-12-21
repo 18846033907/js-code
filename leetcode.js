@@ -215,7 +215,7 @@ function threeSum(arr) {
     const cur = arr[i];
     while (l < r) {
       if (cur + arr[l] + arr[r] === 0) {
-        newArr[newArr.length]=[cur, arr[l], arr[r]];
+        newArr[newArr.length] = [cur, arr[l], arr[r]];
         break;
       } else if (cur + arr[r] + arr[l] > 0) {
         r--;
@@ -310,6 +310,9 @@ function longestPil(s) {
   return s.substring(start, start + maxLength);
 }
 console.log(longestPil("abcbdbd"));
+
+//大数相加
+
 
 //冒泡排序，层层历若后面大于前面则交换相邻
 function bubbleSort(arr) {
@@ -444,3 +447,4 @@ function merge(left, right) {
 }
 // const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
 // console.log(mergeSort(arr));
+

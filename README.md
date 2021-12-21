@@ -23,6 +23,7 @@ no-store：缓存不应存储有关客户端请求或服务器响应的任何内
 后端：需设置Access-Control-Allow-Origin 为当前web域名，不能设为*。Access-Control-Allow-Credentials设置为true
 前端： withCredentials: true,
 'a.test.com'与'b.test.com'  cookie共享可以用domain设为 '.test.com'
+### jwt
 ### HTTP 版本区别
 
 https://blog.csdn.net/m0_60360320/article/details/119812431
@@ -60,6 +61,24 @@ HTTPS:
 若证书中的公钥被替换：
 解决办法：用哈希算法将服务器公钥加密=摘要；用 CA 私钥加密该摘要生成指纹；
 将公钥，指纹，哈希算法放在证书中，客户端用哈希算法加密服务器公钥=摘要，用 CA 公钥解密指纹，若二者相同则可信；CA 公钥嵌入操作系统（微软）
+
+### 事件循环
+
+macro-task大概包括：
+
+script(整体代码)
+setTimeout
+setInterval
+setImmediate
+I/O
+UI render
+
+micro-task大概包括:
+
+process.nextTick
+Promise
+Async/Await(实际就是promise)
+MutationObserver(html5新特性)
 
 ## CSS
 
