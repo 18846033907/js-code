@@ -226,7 +226,7 @@ function threeSum(arr) {
   }
   return newArr;
 }
-console.log(44, threeSum([-4, -1, -1, 0, 1, 2]));
+// console.log(44, threeSum([-4, -1, -1, 0, 1, 2]));
 
 function ListNode(val, next) {
   this.val = val === undefined ? 0 : val;
@@ -287,18 +287,16 @@ function lengthOflongestSubstring(str) {
   return maxLength;
 }
 // console.log(lengthOflongestSubstring("abcbcbc"));
+
 //最长回文子串
 function longestPil(s) {
-  if (s.length <= 0) return s;
-  let maxLength = 1;
   let start = 0;
-  const len = s.length;
+  let maxLength = 1;
+  let len = s.length;
   function h(left, right) {
-    while (left >= 0 && right < len && s[left] === s[right]) {
-      if (right - left + 1 > maxLength) {
-        maxLength = right - left + 1;
-        start = left;
-      }
+    while (left > 0 && right < len && s[left] === s[right]) {
+      maxLength = Math.max(maxLength, right - left);
+      start = left;
       left--;
       right++;
     }
@@ -307,12 +305,66 @@ function longestPil(s) {
     h(i - 1, i + 1);
     h(i, i + 1);
   }
-  return s.substring(start, start + maxLength);
+  return s.substring(start - 1, start + maxLength);
 }
-console.log(longestPil("abcbdbd"));
+// console.log(longestPil("abcbdbd"));
+//容器装满水
+function containerWater(arr) {
+  const len = arr.length;
+  let l = 0;
+  let r = len - 1;
+  let res = 0;
+  while (l < r) {
+    res = Math.max(res, (r - l) * Math.min(arr[l], arr[r]));
+    if (l < r) {
+      l++;
+    } else {
+      r--;
+    }
+  }
+  return res;
+}
+// console.log(containerWater([1,2,3,4,5]))
 
+//无重复子串
+function longestUniqStr(s) {
+  let set = new Set();
+  let len = s.length;
+  for (let i = 0; i < len; i++) {
+    const cur = s[i];
+    if (set.has(cur)) {
+      while (set.has(cur)) {
+        set.delete(cur);
+      }
+      set.add(cur);
+    } else {
+      set.add(cur);
+    }
+  }
+  return set.size;
+}
+// console.log(longestUniqStr("abcdbcbc"));
 //大数相加
+function bigNumAdd(s1, s2) {
+  let len = Math.max(s1.length, s2.length);
+  s1 = s1.padStart(len, 0);
+  s2 = s2.padStart(len, 0);
+  let index = len - 1;
+  let sum = "";
+  let t = 0;
+  let f = 0;
+  while (index > 0) {
+    t = parseInt(s1[index]) + parseInt(s2[index]) + f;
+    f = Math.floor(t / 10);
+    sum = (t % 10) + sum;
+    index--;
+  }
+  return sum;
+}
+// let a = "9007199254740991";
+// let b = "1234567899999999999";
 
+// console.log(bigNumAdd(a, b));
 
 //冒泡排序，层层历若后面大于前面则交换相邻
 function bubbleSort(arr) {
@@ -447,4 +499,3 @@ function merge(left, right) {
 }
 // const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
 // console.log(mergeSort(arr));
-
