@@ -316,7 +316,7 @@ function containerWater(arr) {
   let res = 0;
   while (l < r) {
     res = Math.max(res, (r - l) * Math.min(arr[l], arr[r]));
-    if (l < r) {
+    if (arr[l] < arr[r]) {
       l++;
     } else {
       r--;
