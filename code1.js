@@ -612,20 +612,23 @@ function coinsChange(coins, amount) {
 
 //请实现 DOM2JSON 一个函数，可以把一个 DOM 节点输出 JSON 的格式
 function dom2json(domTree) {
-  console.log(domTree);
-  const obj = {};
-  obj.name = domTree.tagName;
-  obj.children = [];
-  if (domTree.childNodes.length > 0) {
-    domTree.childNodes.forEach((child) => {
-      obj.children.push(dom2json(child));
-    });
+  console.log(615,domTree.tagName,domTree.attributes);
+  let obj = {};
+  if(domTree.tagName){
+    obj.name = domTree.tagName;
+    obj.children = [];
+    if (domTree.childNodes.length > 0) {
+      domTree.childNodes.forEach((child) => {
+        obj.children.push(dom2json(child));
+      });
+    }
   }
   return obj;
+  
 }
 
-// const domTree = document.getElementById("domtree");
-// console.log(dom2json(domTree));
+const domTree = document.getElementById("domtree");
+console.log(dom2json(domTree));
 
 //类数组转化成数组
 function likeArr2Arr(likeArr) {
