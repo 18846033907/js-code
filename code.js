@@ -1041,3 +1041,24 @@
 // 800ms时，3任务执行完毕，输出3，任务4开始执行
 // 1000ms时，1任务执行完毕，输出1，此时只剩下4任务在执行
 // 1200ms时，4任务执行完毕，输出4
+
+
+function noneMatch(str){    
+    let set=new Set();
+    let obj={')':'(',']':'[','}':'{'}
+    for(let i=0;i<str.length;i++){
+        if(str[i]==='('||str[i]==='['||str[i]==='{'){
+          set.add(str[i])
+        }else{
+            console.log(set,str[i])
+            if(set.has(obj[str[i]])){
+                set.delete(obj[str[i]])
+            }else{
+                set.add(str[i])
+            }
+        }
+    }
+    console.log(...set)
+}
+
+noneMatch('({})(]]{[]')

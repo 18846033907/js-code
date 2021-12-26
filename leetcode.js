@@ -499,3 +499,58 @@ function merge(left, right) {
 }
 // const arr = [2, 1, 4, 3, 3, 2, 7, 9, 4, 32, 1];
 // console.log(mergeSort(arr));
+// function hh(){
+//   const arrow=()=>{
+//     console.log('arrow',this)
+//   }
+//   arrow()
+// }
+
+// function arr(){
+//   console.log('arr',this)
+// }
+// function ar(){
+//   console.log('ar',this);
+//   arr.call(this);
+//   hh.call()
+// }
+// const obj={
+//   name:'kkk'
+// }
+
+// ar.call(obj);
+// var a=1;
+// let c1=2;
+// function dd(){
+//   console.log(this.a,this.c1)
+// }
+// dd()
+// String.prototype.myIndexof=function(t){
+//   const reg=new RegExp(t);
+//   let res=reg.exec(this);
+//   return res===null?-1:res.index
+// }
+// console.log('edxfhddfhrnrkrk'.myIndexof('krk'))
+// function Foo(){
+//   Foo.a=function(){
+//     console.log(1)
+//   }
+//   this.a=function(){
+//     console.log(2)
+//   }
+// }
+// Foo.prototype.a=function(){
+//   console.log(3)
+// }
+// Foo.a=function(){
+//   console.log(4)
+// }
+// Foo.a()
+// const obj=new Foo();
+// obj.a();
+let str="gdggfg苟富贵nnn个好地方lllirgtf"
+let reg=/\b[a-z]+\b/ig;
+str=str.replace(reg,function(match){
+  return " "+match+" "
+})
+console.log(str.trim());

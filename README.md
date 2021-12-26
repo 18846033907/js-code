@@ -3,6 +3,8 @@
 ## ES5
 
 ## ES6
+### 箭头函数和普通函数
+箭头函数：无自己的this，跟上下文有关，不能通过call，apply，bind改变；没有arguments；可以通过...args;不能被new执行(因为没有this，没有prototype)
 
 ## HTTP
 
