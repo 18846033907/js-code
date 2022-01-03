@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片懒加载</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      .lazyImgBox {
+        margin: 1000px auto;
+        width: 500px;
+        height: 200px;
+        background: #ddd;
+      }
+      .lazyImgBox img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lazyImgBox">
+      <img src="" data-img="./images/8big.jpg" />
+    </div>
+    <script>
+      let lazyImgBox = document.querySelector(".lazyImgBox"),
+        img = lazyImgBox.querySelector("img");
+      const lazyImgFunc = function () {
+          if(img.isLoad) return;
+        img.src = img.getAttribute("data-img");
+        img.isLoad = true;
+        img.onload = () => {
+          img.style.opacity = 1;
+        };
+      };
+      window.onscroll=function(){
+          let {bottom}=lazyImgBox.getBoundingClientRect();
+          let winH=document.documentElement.clientHeight;
+          if(bottom<=winH){
+            lazyImgFunc()
+          }
+      }
+    </script>
+  </body>
+</html>

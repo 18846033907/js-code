@@ -167,3 +167,18 @@ koa自定义服务器在未渲染页面之前重定向
 webpack压缩css，js，
 配置exclude/include缩小打包范围
 url-loader,image小于8k转为base64，image如果有可能的话用svg或者css动画
+dns预解析：
+
+1.<meta>信息告诉浏览器，当前页面要做DNS预解析；
+
+<meta http-equiv="x-dns-prefetch-control" content="on" />
+
+2.</head>使用<link>标签来强制对DNS预解析；
+
+<link rel="dns-prefetch" href="http://bdimg.share.baidu.com" />
+
+3.dns-prefetch需慎用，多页面重复DNS预解析会增加重复DNS查询次数；
+
+4.浏览器对网站第一次的域名DNS解析查找流程：
+
+浏览器缓存 -> 系统缓存 -> 路由器缓存 -> ISP -> DNS缓存 -> 递归搜素
