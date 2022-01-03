@@ -3,6 +3,8 @@
 ## ES5
 
 ## ES6
+### 箭头函数和普通函数
+箭头函数：无自己的this，跟上下文有关，不能通过call，apply，bind改变；没有arguments；可以通过...args;不能被new执行(因为没有this，没有prototype)
 
 ## HTTP
 
@@ -164,6 +166,7 @@ setTimeout 的执行时间并不是确定的。在 JS 中，setTimeout 任务被
 ## 性能优化
 抽离公共组件；细化组件
 koa自定义服务器在未渲染页面之前重定向
+合理配置元素的key值，尽量不要使用index（react）
 webpack压缩css，js，
 配置exclude/include缩小打包范围
 url-loader,image小于8k转为base64，image如果有可能的话用svg或者css动画

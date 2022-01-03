@@ -837,7 +837,6 @@ const listData = [
   },
 ];
 console.log(list2tree(listData));
-
 //树形结构转成列表
 function tree2list(tree) {
   let list = [];

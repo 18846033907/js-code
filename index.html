@@ -46,8 +46,10 @@
     <div id="container" class='hhh' style='color:aliceblue'>
       <div class='eeee'>eeee</div>
       <div>errrr</div>
+    <div  id="div1Click">
+      <div id="div2Click"><button id="buttonClick">click</button></div>
     </div>
-    <div id='domtree'> 
+    <!-- <div id='domtree'> 
       <span  style='color:red'>
         <a></a>
       </span>
@@ -55,7 +57,7 @@
         <a></a>
         <a></a>
       </span>
-    </div>
+    </div> -->
     <ul id='ul'></ul>
     <!-- <div class='rect'></div> -->
     <!-- <div id="app">
@@ -66,7 +68,7 @@
 
     <!-- <div id="root">
       <button id="btn">点击</button>
-    </div>
+    </div> -->
     <div
       id="a"
       style="width: 100%; height: 300px; background-color: antiquewhite"
@@ -85,7 +87,7 @@
         </div>
       </div>
     </div>
-    <ul id="item-list">
+    <!-- <ul id="item-list">
       <li>item1</li>
       <li>item2</li>
       <li>item3</li>
@@ -110,10 +112,22 @@
     </style> -->
 
     <script>
-      // var a = document.getElementById("a");
-      // var b = document.getElementById("b");
-      // var c = document.getElementById("c");
-      // //注册冒泡事件监听器
+      function div1Click(){
+        console.log('div1Click')
+      }
+      function div2Click(){
+        console.log('div2Click')
+      }
+      function buttonClick(){
+        console.log('buttonClick')
+      }
+      var a = document.getElementById("a");
+      var b = document.getElementById("b");
+      var c = document.getElementById("c");
+    
+
+
+      //注册冒泡事件监听器
       // a.addEventListener("click", () => {
       //   console.log("冒泡a");
       // });
@@ -123,27 +137,27 @@
       // c.addEventListener("click", () => {
       //   console.log("冒泡c");
       // });
-      // a.addEventListener(
-      //   "click",
-      //   () => {
-      //     console.log("捕获a");
-      //   },
-      //   true
-      // );
-      // b.addEventListener(
-      //   "click",
-      //   () => {
-      //     console.log("捕获b");
-      //   },
-      //   true
-      // );
-      // c.addEventListener(
-      //   "click",
-      //   () => {
-      //     console.log("捕获c");
-      //   },
-      //   true
-      // );
+      a.addEventListener(
+        "click",
+        () => {
+          console.log("捕获a");
+        },
+        true
+      );
+      b.addEventListener(
+        "click",
+        () => {
+          console.log("捕获b");
+        },
+        true
+      );
+      c.addEventListener(
+        "click",
+        () => {
+          console.log("捕获c");
+        },
+        true
+      );
 
       // var items = document.getElementById("item-list");
       // //事件捕获实现事件代理
