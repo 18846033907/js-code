@@ -163,10 +163,27 @@ setTimeout 的执行时间并不是确定的。在 JS 中，setTimeout 任务被
 单例模式：全局对象，全局信息提示；
 代理模式：axios拦截；在返回真正信息前做预处理；
 策略模式：策略类，ABCD四个职级工资不同；
+
 ## 性能优化
 抽离公共组件；细化组件
 koa自定义服务器在未渲染页面之前重定向
 合理配置元素的key值，尽量不要使用index（react）
-webpack压缩css，js，
-配置exclude/include缩小打包范围
+webpack压缩css，js，html，image
+配置exclude/include缩小打包处理范围
+拆分chunk
 url-loader,image小于8k转为base64，image如果有可能的话用svg或者css动画
+首屏：骨架屏，去除冗余代码
+
+### 性能优化
+dns解析
+减少http请求，
+使用http2.2
+合理使用缓存
+减小cookie体积
+压缩前端资源（js,css,html,image,字体）
+图片 base64
+图片延迟加载
+css放在head，js放在body下面
+使用cdn加载静态资源
+es6懒加载
+删除冗余代码

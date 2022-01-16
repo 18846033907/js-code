@@ -190,15 +190,15 @@ function districookie(childArr, cookieArr) {
 // console.log(districookie([1,7,10,2],[1,3,5,9]))
 //两数之和
 function twoSum(nums, target) {
-  const m = new Map();
-  let len = nums.length;
+  const map = new Map();
+  const len = nums.length;
   let result = -1;
   for (let i = 0; i < len; i++) {
     const cur = nums[i];
-    if (m.has(target - cur)) {
-      result = [m.get(target - cur), i];
+    if (map.has(target - cur)) {
+      result = [map.get(target - cur), i];
     } else {
-      m.set(cur, i);
+      map.set(cur);
     }
   }
   return result;
@@ -233,18 +233,18 @@ function ListNode(val, next) {
   this.next = next === undefined ? null : next;
 }
 function addTwoNumbers(l1, l2) {
-  let dummy = new ListNode();
+  const dummy = new ListNode();
   let curr = dummy;
   let carry = 0;
-  while (l1 !== null || l2 !== null) {
+  while (l1 !== null && l2 !== null) {
     let sum = 0;
     if (l1 !== null) {
       sum += l1.val;
-      l1 = l1.next;
+      l1 = l1.next();
     }
     if (l2 !== null) {
       sum += l2.val;
-      l2 = l2.next;
+      l2 = l2.next();
     }
     sum += carry;
     curr.next = new ListNode(sum % 10);
@@ -254,7 +254,6 @@ function addTwoNumbers(l1, l2) {
   if (carry > 0) {
     curr.next = new ListNode(carry);
   }
-  console.log(235, dummy);
   return dummy.next;
 }
 // const l1 = new ListNode(2);
@@ -286,26 +285,34 @@ function lengthOflongestSubstring(str) {
   }
   return maxLength;
 }
+
 // console.log(lengthOflongestSubstring("abcbcbc"));
 
 //最长回文子串
 function longestPil(s) {
-  let start = 0;
-  let maxLength = 1;
   let len = s.length;
-  function h(left, right) {
-    while (left > 0 && right < len && s[left] === s[right]) {
-      maxLength = Math.max(maxLength, right - left);
-      start = left;
-      left--;
-      right++;
+  if (len < 2) {
+    return s;
+  }
+  let maxlength = 1;
+  let start = 0;
+  function h(l, r) {
+    while (s[l] === s[r] && l >= 0 && r < len) {
+      if (r - l + 1 > maxlength) {
+        maxlength = r - l + 1;
+        start = l;
+      }
+
+      l--;
+      r++;
     }
   }
-  for (let i = 1; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     h(i - 1, i + 1);
     h(i, i + 1);
   }
-  return s.substring(start - 1, start + maxLength);
+  console.log(start, maxlength);
+  return s.substring(start, start + maxlength);
 }
 // console.log(longestPil("abcbdbd"));
 //容器装满水
@@ -548,9 +555,78 @@ function merge(left, right) {
 // Foo.a()
 // const obj=new Foo();
 // obj.a();
-let str="gdggfg苟富贵nnn个好地方lllirgtf"
-let reg=/\b[a-z]+\b/ig;
-str=str.replace(reg,function(match){
-  return " "+match+" "
-})
+let str = "gdggfg苟富贵nnn个好地方lllirgtf";
+let reg = /\b[a-z]+\b/gi;
+str = str.replace(reg, function (match) {
+  return " " + match + " ";
+});
 console.log(str.trim());
+
+// const arr = [2, 3, 5, 7, 11, 13, 15];
+// const target = 15;
+// function findT(arr, target, left, right) {
+//   let res = -1;
+//   const mid = Math.floor((right + left) / 2);
+//   if (left <= right) {
+//     if (arr[mid] === target) {
+//       res = mid;
+//     } else if (arr[mid] > target) {
+//       res = findT(arr, target, left, mid - 1);
+//     } else {
+//       res = findT(arr, target, mid + 1, right);
+//     }
+//   }
+//   return res;
+// }
+// console.log(findT(arr, target, 0, arr.length));
+
+const arr = [7, 11, 13, 15, 17, 2, 3, 5];
+const target = 12;
+function findT(arr, target) {
+  let res = -1;
+  let len = arr.length;
+  const mid = Math.floor(len / 2);
+  const rightest = arr[len - 1];
+  const leftest = arr[0];
+  let left = arr.slice(0, mid + 1);
+  let right = arr.slice(mid, len - 1);
+  let tArr = [];
+  if (mid < rightest) {
+    //右侧有序
+    if (target > rightest) {
+      //target在左侧
+      tArr = left;
+    } else {
+      if (target < mid) {
+        //target在左侧
+        tArr = left;
+      } else {
+        //target在右侧
+        tArr = right;
+      }
+    }
+  } else {
+    //左侧有序
+    if (target < leftest) {
+      //target在右侧
+      tArr = right;
+    } else {
+      if (target < mid) {
+        //taget在左侧
+        tArr = left;
+      } else {
+        //target在右侧
+        tArr = right;
+      }
+    }
+  }
+  for (let i = 1; i < tArr.length; i++) {
+    const cur = tArr[i];
+    if (cur === target) {
+      res = i;
+      break;
+    }
+  }
+  return res;
+}
+console.log(findT(arr, target));
