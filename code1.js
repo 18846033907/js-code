@@ -612,14 +612,16 @@ function coinsChange(coins, amount) {
 
 //请实现 DOM2JSON 一个函数，可以把一个 DOM 节点输出 JSON 的格式
 function dom2json(domTree) {
-  console.log(domTree);
-  const obj = {};
-  obj.name = domTree.tagName;
-  obj.children = [];
-  if (domTree.childNodes.length > 0) {
-    domTree.childNodes.forEach((child) => {
-      obj.children.push(dom2json(child));
-    });
+  console.log(615, domTree.tagName, domTree.attributes);
+  let obj = {};
+  if (domTree.tagName) {
+    obj.name = domTree.tagName;
+    obj.children = [];
+    if (domTree.childNodes.length > 0) {
+      domTree.childNodes.forEach((child) => {
+        obj.children.push(dom2json(child));
+      });
+    }
   }
   return obj;
 }
@@ -898,3 +900,37 @@ Object.__proto__; //Function.prototype
 Object instanceof Function; //true
 Function instanceof Object; //true
 Function.prototype === Function.__proto__; //true
+
+//快速排序
+function quickSort(arr) {
+  const len = arr.length;
+  return _quickSort(arr, 0, len);
+}
+function _quickSort(arr, left, right) {
+  left = typeof left === "number" ? left : 0;
+  right = typeof right === "number" ? right : arr.length;
+  if (left < right) {
+    const p = partition(arr, left, right);
+    _quickSort(arr, left, p - 1);
+    _quickSort(arr, p + 1, right);
+  }
+  return arr;
+}
+function partition(arr, l, r) {
+  let j = l;
+  for (let i = l+1; i < r; i++) {
+    if (arr[i] < arr[l]) {
+      swap(arr, i, ++j);
+    }
+  }
+  swap(arr, l, j);
+  return j;
+}
+function swap(arr, i, j) {
+  const temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp;
+}
+
+const quickArr=[2,4,6,7,9,0,3,2,4,6,8,43,2];
+console.log(quickSort(quickArr))

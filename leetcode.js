@@ -146,7 +146,6 @@ function climbstair(n) {
 // console.log(climbstair(3))
 
 //完全平方和
-
 function completeSquare(n) {
   let memo = [];
   for (i = 0; i <= n; i++) {
