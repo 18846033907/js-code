@@ -172,7 +172,6 @@ webpack压缩css，js，html，image
 配置exclude/include缩小打包处理范围
 拆分chunk
 url-loader,image小于8k转为base64，image如果有可能的话用svg或者css动画
-<<<<<<< HEAD
 首屏：骨架屏，去除冗余代码
 
 ### 性能优化
@@ -188,7 +187,6 @@ css放在head，js放在body下面
 使用cdn加载静态资源
 es6懒加载
 删除冗余代码
-=======
 dns预解析：
 
 1.<meta>信息告诉浏览器，当前页面要做DNS预解析；
@@ -204,4 +202,3 @@ dns预解析：
 4.浏览器对网站第一次的域名DNS解析查找流程：
 
 浏览器缓存 -> 系统缓存 -> 路由器缓存 -> ISP -> DNS缓存 -> 递归搜素
->>>>>>> 3439279474eda98f37d5d9e8a999c7eaf23931b5
