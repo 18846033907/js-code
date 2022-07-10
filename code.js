@@ -1,7 +1,9 @@
 //数据类型的判断
-// function typeOf(obj) {
-//   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-// }
+function typeOf(obj) {
+  return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+}
+//slice,左闭右开
+
 //数组去重
 // function uniq(arr) {
 // if(!typeOf(arr)==='array') return
@@ -11,7 +13,7 @@
 //     newArr.push(item);
 //   });
 //   return newArr;
-// }
+// };
 
 //ES5实现
 // function uniq(arr) {
@@ -22,6 +24,7 @@
 //   });
 //   return res;
 // }
+
 
 //ES6实现
 // function uniq(arr) {
@@ -58,7 +61,7 @@
 // console.log(flatten(aR));
 
 //深浅拷贝
-//浅拷贝
+//浅拷贝 for...in 任意对象，继承的可枚举属性，for...of 任何可迭代对象
 // function shallowCopy(obj) {
 //   if (typeOf(obj) !== "object") return;
 //   var newObj = obj instanceof Array ? [] : {};
@@ -70,11 +73,26 @@
 //   return newObj;
 // }
 
+// function shallow(obj){
+//     if(typeof obj ==="object" && obj!==null){
+//         var newObj=Array.isArray(obj)?[]:{};
+//         for (let key in obj){
+//             if(obj.hasOwnProperty(key)){
+//                 newObj[key]=obj[key]    
+//             }
+           
+//         }
+//         return newObj
+//     }else{
+//         return obj
+//     }
+// }
+
 // function shallowCopy(obj) {
 //   if (typeof obj === "object" && obj !== null) {
 //    let res = Array.isArray(obj) ? [] : {};
 //     for (let key in obj) {
-//       res[key] = obj[key];
+//         res[key] = obj[key];
 //     }
 //     return res
 //   }else{
@@ -95,6 +113,7 @@
 //     return obj;
 //   }
 // }
+
 // function deepCopy(obj) {
 //   if (obj === null) return obj;
 //   if (obj instanceof Date) return new Date(obj);
@@ -231,6 +250,18 @@
 //       fn.apply(context, args);
 //     }, delay);
 //   };
+// }
+
+// function debounce(fn,delay){
+// let timer=null;
+// return function(){
+//     clearTimeout(timer);
+//     let context=this;
+//     let args=arguments;
+//     timer=setTimeout(function(){
+//         fn.apply(context,args);
+//     },delay)
+// }
 // }
 
 // //复杂版:支持立即执行；函数可能有返回值；支持取消功能；
@@ -435,6 +466,7 @@
 //   }
 // };
 
+
 // const arr = [1, 2, 3, 4];
 // arr.forEach2((item) => {
 //   console.log(item);
@@ -525,14 +557,15 @@
 //   return res;
 // };
 
+
 // var flattened = [
 //   [0, 1],
 //   [2, 3],
 //   [4, 5],
-// ].reduce(function (a, b) {
+// ].reduce2(function (a, b) {
 //   return a.concat(b);
 // }, []);
-
+// console.log(flattened)
 // const arr = [1, 2, 3, 4];
 // const mapArr = arr.reduce2((pre, cur) => {
 //   return pre + cur;
@@ -564,6 +597,7 @@
 //   delete ctx[fn];
 //   return result;
 // };
+
 
 // function mySymbol(obj) {
 //   // 不要问我为什么这么写，我也不知道就感觉这样nb
@@ -839,7 +873,7 @@
 // function foo() {
 //   this.name = "ciel";
 //   this.arg = arguments[0];
-//   return function(){};
+// //   return function(){};
 // }
 // foo.prototype.callName = function () {
 //   console.log(this.name);
@@ -858,6 +892,7 @@
 //   if (proto === right.prototype) return true;
 //   return instanceof2(proto, right);
 // }
+
 
 // function instanceof2(left, right) {
 //   let proto = left.__proto__;
@@ -1043,22 +1078,22 @@
 // 1200ms时，4任务执行完毕，输出4
 
 
-function noneMatch(str){    
-    let set=new Set();
-    let obj={')':'(',']':'[','}':'{'}
-    for(let i=0;i<str.length;i++){
-        if(str[i]==='('||str[i]==='['||str[i]==='{'){
-          set.add(str[i])
-        }else{
-            console.log(set,str[i])
-            if(set.has(obj[str[i]])){
-                set.delete(obj[str[i]])
-            }else{
-                set.add(str[i])
-            }
-        }
-    }
-    console.log(...set)
-}
+// function noneMatch(str){    
+//     let set=new Set();
+//     let obj={')':'(',']':'[','}':'{'}
+//     for(let i=0;i<str.length;i++){
+//         if(str[i]==='('||str[i]==='['||str[i]==='{'){
+//           set.add(str[i])
+//         }else{
+//             console.log(set,str[i])
+//             if(set.has(obj[str[i]])){
+//                 set.delete(obj[str[i]])
+//             }else{
+//                 set.add(str[i])
+//             }
+//         }
+//     }
+//     console.log(...set)
+// }
 
-noneMatch('({})(]]{[]')
+// noneMatch('({})(]]{[]')
